@@ -1,8 +1,8 @@
 package wechatopen
 
 import (
+	"go.dtapp.net/dorm"
 	"go.dtapp.net/golog"
-	"go.dtapp.net/goredis"
 	"go.dtapp.net/gorequest"
 	"gorm.io/gorm"
 )
@@ -19,16 +19,16 @@ type App struct {
 	componentAppSecret     string // 第三方平台 app_secret
 	messageToken           string
 	messageKey             string
-	redis                  *goredis.Client // 缓存数据库
-	pgsql                  *gorm.DB        // pgsql数据库
-	client                 *gorequest.App  // 请求客户端
-	log                    *golog.Api      // 日志服务
-	logTableName           string          // 日志表名
-	logStatus              bool            // 日志状态
+	redis                  *dorm.RedisClient // 缓存数据库
+	pgsql                  *gorm.DB          // pgsql数据库
+	client                 *gorequest.App    // 请求客户端
+	log                    *golog.Api        // 日志服务
+	logTableName           string            // 日志表名
+	logStatus              bool              // 日志状态
 }
 
 // NewApp 实例化
-func NewApp(componentAppId string, componentAppSecret string, messageToken string, messageKey string, redis *goredis.Client, pgsql *gorm.DB) *App {
+func NewApp(componentAppId string, componentAppSecret string, messageToken string, messageKey string, redis *dorm.RedisClient, pgsql *gorm.DB) *App {
 	app := &App{componentAppId: componentAppId, componentAppSecret: componentAppSecret, messageToken: messageToken, messageKey: messageKey, redis: redis}
 	app.client = gorequest.NewHttp()
 	if pgsql != nil {
