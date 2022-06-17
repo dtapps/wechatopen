@@ -6,5 +6,4 @@
 *.log
 goinit.sh
 gomod.sh
-/vendor/
 *_test.go
