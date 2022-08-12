@@ -1,6 +1,7 @@
 package wechatopen
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"go.dtapp.net/gorequest"
@@ -25,12 +26,12 @@ func newCgiBinWxOpenQrCodeJumpDeleteResult(result CgiBinWxOpenQrCodeJumpDeleteRe
 
 // CgiBinWxOpenQrCodeJumpDelete 删除已设置的二维码规则
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/qrcode/qrcodejumpdelete.html
-func (c *Client) CgiBinWxOpenQrCodeJumpDelete(prefix string) *CgiBinWxOpenQrCodeJumpDeleteResult {
+func (c *Client) CgiBinWxOpenQrCodeJumpDelete(ctx context.Context, prefix string) *CgiBinWxOpenQrCodeJumpDeleteResult {
 	// 参数
 	params := gorequest.NewParams()
 	params["prefix"] = prefix
 	// 请求
-	request, err := c.request(fmt.Sprintf(apiUrl+"/cgi-bin/wxopen/qrcodejumpdelete?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/wxopen/qrcodejumpdelete?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
 	// 定义
 	var response CgiBinWxOpenQrCodeJumpDeleteResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

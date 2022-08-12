@@ -1,6 +1,7 @@
 package wechatopen
 
 import (
+	"context"
 	"encoding/json"
 	"go.dtapp.net/gorequest"
 	"net/http"
@@ -24,7 +25,7 @@ func newCgiBinComponentApiComponentTokenResult(result CgiBinComponentApiComponen
 
 // CgiBinComponentApiComponentToken 令牌
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_access_token.html
-func (c *Client) CgiBinComponentApiComponentToken() *CgiBinComponentApiComponentTokenResult {
+func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context) *CgiBinComponentApiComponentTokenResult {
 	// 参数
 	param := gorequest.NewParams()
 	param["component_appid"] = c.config.ComponentAppId              // 第三方平台 appid
@@ -32,7 +33,7 @@ func (c *Client) CgiBinComponentApiComponentToken() *CgiBinComponentApiComponent
 	param["component_verify_ticket"] = c.GetComponentVerifyTicket() // 微信后台推送的 ticket
 	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request(apiUrl+"/cgi-bin/component/api_component_token", params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/api_component_token", params, http.MethodPost)
 	// 定义
 	var response CgiBinComponentApiComponentTokenResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
