@@ -36,7 +36,7 @@ func (c *Client) CgiBinComponentApiAuthorizerToken(ctx context.Context, authoriz
 	param["authorizer_refresh_token"] = authorizerRefreshToken // 授权码, 会在授权成功时返回给第三方平台
 	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_authorizer_token?component_access_token=%v", c.GetComponentAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_authorizer_token?component_access_token=%v", c.GetComponentAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response CgiBinComponentApiAuthorizerTokenResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

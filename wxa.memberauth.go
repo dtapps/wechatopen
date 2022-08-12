@@ -31,7 +31,7 @@ func newWxaMemberAuthResult(result WxaMemberAuthResponse, body []byte, http gore
 // WxaMemberAuth 获取体验者列表
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_AdminManagement/memberauth.html
 func (c *Client) WxaMemberAuth(ctx context.Context) *WxaMemberAuthResult {
-	accessToken := c.GetAuthorizerAccessToken()
+	accessToken := c.GetAuthorizerAccessToken(ctx)
 	if accessToken == "" {
 		return newWxaMemberAuthResult(WxaMemberAuthResponse{}, nil, gorequest.Response{}, errors.New("访问令牌为空"))
 	}

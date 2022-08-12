@@ -38,7 +38,7 @@ func newWxaGetTemplateDraftListResult(result WxaGetTemplateDraftListResponse, bo
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/gettemplatedraftlist.html
 func (c *Client) WxaGetTemplateDraftList(ctx context.Context) *WxaGetTemplateDraftListResult {
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/gettemplatedraftlist?access_token=%s", c.GetComponentAccessToken()), map[string]interface{}{}, http.MethodGet)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/gettemplatedraftlist?access_token=%s", c.GetComponentAccessToken(ctx)), map[string]interface{}{}, http.MethodGet)
 	// 定义
 	var response WxaGetTemplateDraftListResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

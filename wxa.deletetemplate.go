@@ -31,7 +31,7 @@ func (c *Client) WxaDeleteTemplate(ctx context.Context, templateId string) *WxaD
 	params := gorequest.NewParams()
 	params.Set("template_id", templateId)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/deletetemplate?access_token=%s", c.GetComponentAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/deletetemplate?access_token=%s", c.GetComponentAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaDeleteTemplateResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

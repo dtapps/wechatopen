@@ -54,7 +54,7 @@ func (c *Client) WxaGetEffectiveDomain(ctx context.Context, notMustParams ...gor
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_effective_domain?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_effective_domain?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaGetEffectiveDomainResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

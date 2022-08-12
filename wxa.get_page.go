@@ -29,7 +29,7 @@ func newWxaGetPageResult(result WxaGetPageResponse, body []byte, http gorequest.
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_page.html
 func (c *Client) WxaGetPage(ctx context.Context) *WxaGetPageResult {
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_page?access_token=%s", c.GetAuthorizerAccessToken()), map[string]interface{}{}, http.MethodGet)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_page?access_token=%s", c.GetAuthorizerAccessToken(ctx)), map[string]interface{}{}, http.MethodGet)
 	// 定义
 	var response WxaGetPageResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

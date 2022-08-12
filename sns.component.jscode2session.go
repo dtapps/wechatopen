@@ -34,11 +34,11 @@ func newSnsComponentJsCode2sessionResult(result SnsComponentJsCode2sessionRespon
 func (c *Client) SnsComponentJsCode2session(ctx context.Context, jsCode string) *SnsComponentJsCode2sessionResult {
 	// 参数
 	params := gorequest.NewParams()
-	params["appid"] = c.config.AuthorizerAppid                     // 小程序的 appId
-	params["js_code"] = jsCode                                     // wx.login 获取的 code
-	params["grant_type"] = "authorization_code"                    // 填 authorization_code
-	params["component_appid"] = c.config.ComponentAppId            // 第三方平台 appid
-	params["component_access_token"] = c.GetComponentAccessToken() // 第三方平台的component_access_token
+	params["appid"] = c.config.AuthorizerAppid                        // 小程序的 appId
+	params["js_code"] = jsCode                                        // wx.login 获取的 code
+	params["grant_type"] = "authorization_code"                       // 填 authorization_code
+	params["component_appid"] = c.config.ComponentAppId               // 第三方平台 appid
+	params["component_access_token"] = c.GetComponentAccessToken(ctx) // 第三方平台的component_access_token
 	// 请求
 	request, err := c.request(ctx, apiUrl+"/sns/component/jscode2session", params, http.MethodGet)
 	// 定义

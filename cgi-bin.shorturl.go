@@ -33,7 +33,7 @@ func (c *Client) CgiBinShortUrl(ctx context.Context, longUrl string) *CgiBinShor
 	params["action"] = "long2short" // 此处填long2short，代表长链接转短链接
 	params["long_url"] = longUrl    // 需要转换的长链接，支持http://、https://、weixin://wxpay 格式的url
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/shorturl?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/shorturl?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response CgiBinShortUrlResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

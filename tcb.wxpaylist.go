@@ -37,7 +37,7 @@ func (c *Client) TckWxPayList(ctx context.Context) *TckWxPayListResult {
 	// 参数
 	params := gorequest.NewParams()
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/tcb/wxpaylist?access_token="+c.GetComponentAccessToken(), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/tcb/wxpaylist?access_token="+c.GetComponentAccessToken(ctx), params, http.MethodPost)
 	// 定义
 	var response TckWxPayListResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

@@ -91,7 +91,7 @@ func (c *Client) CgiBinComponentApiGetAuthorizerInfo(ctx context.Context) *CgiBi
 	param["authorizer_appid"] = c.config.AuthorizerAppid // 授权方 appid
 	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_get_authorizer_info?component_access_token=%v", c.GetComponentAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_get_authorizer_info?component_access_token=%v", c.GetComponentAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response CgiBinComponentApiGetAuthorizerInfoResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

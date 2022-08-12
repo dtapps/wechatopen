@@ -32,7 +32,7 @@ func (c *Client) WxaAddToTemplate(ctx context.Context, draftId string, templateT
 	params["draft_id"] = draftId
 	params["template_type"] = templateType
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/addtotemplate?access_token=%s", c.GetComponentAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/addtotemplate?access_token=%s", c.GetComponentAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaAddToTemplateResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

@@ -30,7 +30,7 @@ func (c *Client) WxaRelease(ctx context.Context) *WxaReleaseResult {
 	// 参数
 	params := gorequest.NewParams()
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/release?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/release?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaReleaseResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

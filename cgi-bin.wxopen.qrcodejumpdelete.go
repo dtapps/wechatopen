@@ -31,7 +31,7 @@ func (c *Client) CgiBinWxOpenQrCodeJumpDelete(ctx context.Context, prefix string
 	params := gorequest.NewParams()
 	params["prefix"] = prefix
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/wxopen/qrcodejumpdelete?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/wxopen/qrcodejumpdelete?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response CgiBinWxOpenQrCodeJumpDeleteResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

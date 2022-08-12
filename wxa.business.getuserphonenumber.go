@@ -40,7 +40,7 @@ func (c *Client) WxaBusinessGetUserPhoneNumber(ctx context.Context, code string)
 	params := gorequest.NewParams()
 	params.Set("code", code)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/business/getuserphonenumber?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/business/getuserphonenumber?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaBusinessGetUserPhoneNumberResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

@@ -36,7 +36,7 @@ func newWxaGetCategoryResult(result WxaGetCategoryResponse, body []byte, http go
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/get_category.html
 func (c *Client) WxaGetCategory(ctx context.Context) *WxaGetCategoryResult {
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_category?access_token=%s", c.GetAuthorizerAccessToken()), map[string]interface{}{}, http.MethodGet)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_category?access_token=%s", c.GetAuthorizerAccessToken(ctx)), map[string]interface{}{}, http.MethodGet)
 	// 定义
 	var response WxaGetCategoryResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

@@ -35,7 +35,7 @@ func (c *Client) WxaGetAuditStatus(ctx context.Context, auditid int64) *WxaGetAu
 	params := gorequest.NewParams()
 	params.Set("auditid", auditid)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_auditstatus?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_auditstatus?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaGetAuditStatusResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

@@ -43,7 +43,7 @@ func (c *Client) WxaModifyDomain(ctx context.Context, notMustParams ...gorequest
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/modify_domain?access_token=%s", c.GetAuthorizerAccessToken()), params, http.MethodPost)
+	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/modify_domain?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
 	// 定义
 	var response WxaModifyDomainResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
