@@ -11,9 +11,9 @@ type SimpleOperation struct {
 	ctx context.Context
 }
 
-func (c *RedisClient) NewSimpleOperation() *SimpleOperation {
+func (r *RedisClient) NewSimpleOperation() *SimpleOperation {
 	return &SimpleOperation{
-		db:  c.Db,
+		db:  r.Db,
 		ctx: context.Background(),
 	}
 }

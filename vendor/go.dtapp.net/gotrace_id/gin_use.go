@@ -21,5 +21,9 @@ func SetGinTraceId() gin.HandlerFunc {
 
 // GetGinTraceId 通过gin中间件获取跟踪编号
 func GetGinTraceId(c *gin.Context) string {
-	return fmt.Sprintf("%s", c.MustGet("trace_id"))
+	traceId := fmt.Sprintf("%v", c.MustGet("trace_id"))
+	if len(traceId) <= 0 {
+		return ""
+	}
+	return traceId
 }

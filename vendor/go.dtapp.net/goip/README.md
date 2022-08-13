@@ -2,7 +2,7 @@
 <a href="https://www.dtapp.net/">Golang Ip</a>
 </h1>
 
-📦 Golang Ip库
+📦 Golang Ip
 
 [comment]: <> (go)
 [![godoc](https://pkg.go.dev/badge/go.dtapp.net/goip?status.svg)](https://pkg.go.dev/go.dtapp.net/goip)
@@ -22,17 +22,18 @@ go get -v -u go.dtapp.net/goip
 package main
 
 import (
+	"context"
 	"go.dtapp.net/goip"
 	"testing"
 )
 
 func TestGoIp(t *testing.T) {
 	// 获取Mac地址
-	t.Log(goip.GetMacAddr())
+	t.Log(goip.GetMacAddr(context.Background()))
 	// 内网ip
-	t.Log(goip.GetInsideIp())
+	t.Log(goip.GetInsideIp(context.Background()))
 	// 外网ip
-	t.Log(goip.GetOutsideIp())
+	t.Log(goip.GetOutsideIp(context.Background()))
 }
 
 ```

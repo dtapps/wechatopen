@@ -11,9 +11,9 @@ type StringOperation struct {
 	ctx context.Context
 }
 
-func (c *RedisClient) NewStringOperation() *StringOperation {
+func (r *RedisClient) NewStringOperation() *StringOperation {
 	return &StringOperation{
-		db:  c.Db,
+		db:  r.Db,
 		ctx: context.Background(),
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"go.dtapp.net/gourl"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
+	"log"
 	"time"
 	"unicode/utf8"
 )
@@ -63,7 +64,7 @@ func (c *ApiClient) GormMiddleware(ctx context.Context, request gorequest.Respon
 	if request.ResponseHeader.Get("Content-Type") == "image/jpeg" || request.ResponseHeader.Get("Content-Type") == "image/png" {
 		return
 	}
-	c.gormRecord(ctx, apiPostgresqlLog{
+	err := c.gormRecord(ctx, apiPostgresqlLog{
 		RequestTime:           request.RequestTime,                                              //【请求】时间
 		RequestUri:            request.RequestUri,                                               //【请求】链接
 		RequestUrl:            gourl.UriParse(request.RequestUri).Url,                           //【请求】链接
@@ -78,11 +79,14 @@ func (c *ApiClient) GormMiddleware(ctx context.Context, request gorequest.Respon
 		ResponseTime:          request.ResponseTime,                                             //【返回】时间
 		SdkVersion:            sdkVersion,                                                       //【程序】Sdk版本
 	})
+	if err != nil {
+		log.Println("log.GormMiddleware：", err.Error())
+	}
 }
 
 // GormMiddlewareXml 中间件
 func (c *ApiClient) GormMiddlewareXml(ctx context.Context, request gorequest.Response, sdkVersion string) {
-	c.gormRecord(ctx, apiPostgresqlLog{
+	err := c.gormRecord(ctx, apiPostgresqlLog{
 		RequestTime:           request.RequestTime,                                                                   //【请求】时间
 		RequestUri:            request.RequestUri,                                                                    //【请求】链接
 		RequestUrl:            gourl.UriParse(request.RequestUri).Url,                                                //【请求】链接
@@ -97,11 +101,14 @@ func (c *ApiClient) GormMiddlewareXml(ctx context.Context, request gorequest.Res
 		ResponseTime:          request.ResponseTime,                                                                  //【返回】时间
 		SdkVersion:            sdkVersion,                                                                            //【程序】Sdk版本
 	})
+	if err != nil {
+		log.Println("log.GormMiddlewareXml：", err.Error())
+	}
 }
 
 // GormMiddlewareCustom 中间件
 func (c *ApiClient) GormMiddlewareCustom(ctx context.Context, api string, request gorequest.Response, sdkVersion string) {
-	c.gormRecord(ctx, apiPostgresqlLog{
+	err := c.gormRecord(ctx, apiPostgresqlLog{
 		RequestTime:           request.RequestTime,                                              //【请求】时间
 		RequestUri:            request.RequestUri,                                               //【请求】链接
 		RequestUrl:            gourl.UriParse(request.RequestUri).Url,                           //【请求】链接
@@ -116,4 +123,7 @@ func (c *ApiClient) GormMiddlewareCustom(ctx context.Context, api string, reques
 		ResponseTime:          request.ResponseTime,                                             //【返回】时间
 		SdkVersion:            sdkVersion,                                                       //【程序】Sdk版本
 	})
+	if err != nil {
+		log.Println("log.GormMiddlewareCustom：", err.Error())
+	}
 }

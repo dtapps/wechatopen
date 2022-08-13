@@ -12,6 +12,7 @@ import (
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"io/ioutil"
+	"log"
 	"net"
 	"time"
 )
@@ -132,7 +133,7 @@ func (c *GinClient) GormMiddleware() gin.HandlerFunc {
 					host = "https://" + ginCtx.Request.Host
 				}
 				if len(jsonBody) > 0 {
-					c.gormRecord(ginPostgresqlLog{
+					err := c.gormRecord(ginPostgresqlLog{
 						TraceId:           gotrace_id.GetGinTraceId(ginCtx),                                     //【系统】链编号
 						RequestTime:       requestTime,                                                          //【请求】时间
 						RequestUri:        host + ginCtx.Request.RequestURI,                                     //【请求】请求链接
@@ -156,8 +157,11 @@ func (c *GinClient) GormMiddleware() gin.HandlerFunc {
 						ResponseData:      datatypes.JSON(responseBody),                                         //【返回】数据
 						CostTime:          endTime - startTime,                                                  //【系统】花费时间
 					})
+					if err != nil {
+						log.Println("log.gormRecord：", err.Error())
+					}
 				} else {
-					c.gormRecord(ginPostgresqlLog{
+					err := c.gormRecord(ginPostgresqlLog{
 						TraceId:           gotrace_id.GetGinTraceId(ginCtx),                                     //【系统】链编号
 						RequestTime:       requestTime,                                                          //【请求】时间
 						RequestUri:        host + ginCtx.Request.RequestURI,                                     //【请求】请求链接
@@ -181,6 +185,9 @@ func (c *GinClient) GormMiddleware() gin.HandlerFunc {
 						ResponseData:      datatypes.JSON(responseBody),                                         //【返回】数据
 						CostTime:          endTime - startTime,                                                  //【系统】花费时间
 					})
+					if err != nil {
+						log.Println("log.gormRecord：", err.Error())
+					}
 				}
 			}
 		}()

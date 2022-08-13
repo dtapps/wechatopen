@@ -19,5 +19,9 @@ func SetGinTraceIdContext(c *gin.Context) context.Context {
 
 // GetTraceIdContext 通过上下文获取跟踪编号
 func GetTraceIdContext(ctx context.Context) string {
-	return fmt.Sprintf("%s", ctx.Value("trace_id"))
+	traceId := fmt.Sprintf("%v", ctx.Value("trace_id"))
+	if len(traceId) <= 0 {
+		return ""
+	}
+	return traceId
 }
