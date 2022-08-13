@@ -17,16 +17,18 @@ type ConfigClient struct {
 	ComponentAppSecret     string // 第三方平台 app_secret
 	MessageToken           string
 	MessageKey             string
-	GormClient             *dorm.GormClient // 日志数据库
-	LogClient              *golog.GoLog     // 日志驱动
-	LogDebug               bool             // 日志开关
+	RedisClient            *dorm.RedisClient // 缓存数据库
+	GormClient             *dorm.GormClient  // 日志数据库
+	LogClient              *golog.GoLog      // 日志驱动
+	LogDebug               bool              // 日志开关
 }
 
 // Client 微信公众号服务
 type Client struct {
-	requestClient *gorequest.App   // 请求服务
-	logClient     *golog.ApiClient // 日志服务
-	config        *ConfigClient    // 配置
+	requestClient *gorequest.App    // 请求服务
+	redisClient   *dorm.RedisClient // 缓存服务
+	logClient     *golog.ApiClient  // 日志服务
+	config        *ConfigClient     // 配置
 }
 
 func NewClient(config *ConfigClient) (*Client, error) {
@@ -35,6 +37,8 @@ func NewClient(config *ConfigClient) (*Client, error) {
 	c := &Client{config: config}
 
 	c.requestClient = gorequest.NewHttp()
+
+	c.redisClient = config.RedisClient
 
 	if c.config.GormClient.Db != nil {
 		c.logClient, err = golog.NewApiClient(&golog.ApiClientConfig{

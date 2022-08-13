@@ -16,16 +16,16 @@ func (c *Client) SetComponentVerifyTicket(ctx context.Context, componentVerifyTi
 	if componentVerifyTicket == "" {
 		return ""
 	}
-	c.config.RedisClient.Set(ctx, c.getComponentVerifyTicketCacheKeyName(), componentVerifyTicket, time.Hour*12)
+	c.redisClient.Set(ctx, c.getComponentVerifyTicketCacheKeyName(), componentVerifyTicket, time.Hour*12)
 	return c.GetComponentVerifyTicket(ctx)
 }
 
 // GetComponentVerifyTicket 获取微信后台推送的ticke
 func (c *Client) GetComponentVerifyTicket(ctx context.Context) string {
-	if c.config.RedisClient.Db == nil {
+	if c.redisClient.Db == nil {
 		return c.config.ComponentVerifyTicket
 	}
-	result, _ := c.config.RedisClient.Get(ctx, c.getComponentVerifyTicketCacheKeyName()).Result()
+	result, _ := c.redisClient.Get(ctx, c.getComponentVerifyTicketCacheKeyName()).Result()
 	return result
 }
 
@@ -39,16 +39,16 @@ func (c *Client) SetComponentAccessToken(ctx context.Context, componentAccessTok
 	if componentAccessToken == "" {
 		return ""
 	}
-	c.config.RedisClient.Set(ctx, c.getComponentAccessTokenCacheKeyName(), componentAccessToken, time.Second*7200)
+	c.redisClient.Set(ctx, c.getComponentAccessTokenCacheKeyName(), componentAccessToken, time.Second*7200)
 	return c.GetComponentAccessToken(ctx)
 }
 
 // GetComponentAccessToken 获取令牌
 func (c *Client) GetComponentAccessToken(ctx context.Context) string {
-	if c.config.RedisClient.Db == nil {
+	if c.redisClient.Db == nil {
 		return c.config.ComponentAccessToken
 	}
-	result, _ := c.config.RedisClient.Db.Get(ctx, c.getComponentAccessTokenCacheKeyName()).Result()
+	result, _ := c.redisClient.Db.Get(ctx, c.getComponentAccessTokenCacheKeyName()).Result()
 	return result
 }
 
@@ -75,16 +75,16 @@ func (c *Client) SetAuthorizerAccessToken(ctx context.Context, authorizerAccessT
 	if authorizerAccessToken == "" {
 		return ""
 	}
-	c.config.RedisClient.Set(ctx, c.getAuthorizerAccessTokenCacheKeyName(), authorizerAccessToken, time.Hour*2)
+	c.redisClient.Set(ctx, c.getAuthorizerAccessTokenCacheKeyName(), authorizerAccessToken, time.Hour*2)
 	return c.GetComponentAccessToken(ctx)
 }
 
 // GetAuthorizerAccessToken 获取授权方令牌
 func (c *Client) GetAuthorizerAccessToken(ctx context.Context) string {
-	if c.config.RedisClient.Db == nil {
+	if c.redisClient.Db == nil {
 		return c.config.AuthorizerAccessToken
 	}
-	result, _ := c.config.RedisClient.Get(ctx, c.getAuthorizerAccessTokenCacheKeyName()).Result()
+	result, _ := c.redisClient.Get(ctx, c.getAuthorizerAccessTokenCacheKeyName()).Result()
 	return result
 }
 
@@ -110,22 +110,22 @@ func (c *Client) SetPreAuthCode(ctx context.Context, preAuthCode string) string 
 	if preAuthCode == "" {
 		return ""
 	}
-	c.config.RedisClient.Set(ctx, c.getPreAuthCodeCacheKeyName(), preAuthCode, time.Second*1700)
+	c.redisClient.Set(ctx, c.getPreAuthCodeCacheKeyName(), preAuthCode, time.Second*1700)
 	return c.GetComponentAccessToken(ctx)
 }
 
 // GetPreAuthCode 获取预授权码
 func (c *Client) GetPreAuthCode(ctx context.Context) string {
-	if c.config.RedisClient.Db == nil {
+	if c.redisClient.Db == nil {
 		return c.config.AuthorizerAccessToken
 	}
-	result, _ := c.config.RedisClient.Get(ctx, c.getPreAuthCodeCacheKeyName()).Result()
+	result, _ := c.redisClient.Get(ctx, c.getPreAuthCodeCacheKeyName()).Result()
 	return result
 }
 
 // DelPreAuthCode 删除预授权码
 func (c *Client) DelPreAuthCode(ctx context.Context) error {
-	return c.config.RedisClient.Del(ctx, c.getPreAuthCodeCacheKeyName()).Err()
+	return c.redisClient.Del(ctx, c.getPreAuthCodeCacheKeyName()).Err()
 }
 
 // MonitorPreAuthCode 监控预授权码
