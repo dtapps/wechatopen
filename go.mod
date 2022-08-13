@@ -4,10 +4,9 @@ go 1.19
 
 require (
 	github.com/mitchellh/mapstructure v1.5.0
-	go.dtapp.net/dorm v1.0.19
-	go.dtapp.net/golog v1.0.26
+	go.dtapp.net/dorm v1.0.21
+	go.dtapp.net/golog v1.0.27
 	go.dtapp.net/gorequest v1.0.26
-	gorm.io/gorm v1.23.8
 )
 
 require (
@@ -86,6 +85,7 @@ require (
 	gorm.io/datatypes v1.0.7 // indirect
 	gorm.io/driver/mysql v1.3.5 // indirect
 	gorm.io/driver/postgres v1.3.8 // indirect
+	gorm.io/gorm v1.23.8 // indirect
 	mellium.im/sasl v0.2.1 // indirect
 	xorm.io/builder v0.3.12 // indirect
 	xorm.io/xorm v1.3.1 // indirect
