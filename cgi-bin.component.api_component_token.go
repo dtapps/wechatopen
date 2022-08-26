@@ -28,8 +28,8 @@ func newCgiBinComponentApiComponentTokenResult(result CgiBinComponentApiComponen
 func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context) *CgiBinComponentApiComponentTokenResult {
 	// 参数
 	param := gorequest.NewParams()
-	param["component_appid"] = c.config.ComponentAppId                 // 第三方平台 appid
-	param["component_appsecret"] = c.config.ComponentAppSecret         // 第三方平台 appsecret
+	param["component_appid"] = c.GetComponentAppId()                   // 第三方平台 appid
+	param["component_appsecret"] = c.GetComponentAppSecret()           // 第三方平台 appsecret
 	param["component_verify_ticket"] = c.GetComponentVerifyTicket(ctx) // 微信后台推送的 ticket
 	params := gorequest.NewParamsWith(param)
 	// 请求

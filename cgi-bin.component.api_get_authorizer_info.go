@@ -87,8 +87,8 @@ func newCgiBinComponentApiGetAuthorizerInfoResult(result CgiBinComponentApiGetAu
 func (c *Client) CgiBinComponentApiGetAuthorizerInfo(ctx context.Context) *CgiBinComponentApiGetAuthorizerInfoResult {
 	// 参数
 	param := gorequest.NewParams()
-	param["component_appid"] = c.config.ComponentAppId   // 第三方平台 appid
-	param["authorizer_appid"] = c.config.AuthorizerAppid // 授权方 appid
+	param["component_appid"] = c.GetComponentAppId()   // 第三方平台 appid
+	param["authorizer_appid"] = c.GetAuthorizerAppid() // 授权方 appid
 	params := gorequest.NewParamsWith(param)
 	// 请求
 	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_get_authorizer_info?component_access_token=%v", c.GetComponentAccessToken(ctx)), params, http.MethodPost)

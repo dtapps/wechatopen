@@ -31,8 +31,8 @@ func newCgiBinComponentApiAuthorizerTokenResult(result CgiBinComponentApiAuthori
 func (c *Client) CgiBinComponentApiAuthorizerToken(ctx context.Context, authorizerRefreshToken string) *CgiBinComponentApiAuthorizerTokenResult {
 	// 参数
 	param := gorequest.NewParams()
-	param["component_appid"] = c.config.ComponentAppId         // 第三方平台 appid
-	param["authorizer_appid"] = c.config.AuthorizerAppid       // 授权方 appid
+	param["component_appid"] = c.GetComponentAppId()           // 第三方平台 appid
+	param["authorizer_appid"] = c.GetAuthorizerAppid()         // 授权方 appid
 	param["authorizer_refresh_token"] = authorizerRefreshToken // 授权码, 会在授权成功时返回给第三方平台
 	params := gorequest.NewParamsWith(param)
 	// 请求
@@ -40,5 +40,5 @@ func (c *Client) CgiBinComponentApiAuthorizerToken(ctx context.Context, authoriz
 	// 定义
 	var response CgiBinComponentApiAuthorizerTokenResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return newCgiBinComponentApiAuthorizerTokenResult(response, request.ResponseBody, request, err, c.config.AuthorizerAppid)
+	return newCgiBinComponentApiAuthorizerTokenResult(response, request.ResponseBody, request, err, c.GetAuthorizerAppid())
 }

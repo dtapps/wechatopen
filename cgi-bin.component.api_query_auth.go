@@ -43,8 +43,8 @@ func newCgiBinComponentApiQueryAuthResult(result CgiBinComponentApiQueryAuthResp
 func (c *Client) CgiBinComponentApiQueryAuth(ctx context.Context, authorizationCode string) *CgiBinComponentApiQueryAuthResult {
 	// 参数
 	param := gorequest.NewParams()
-	param["component_appid"] = c.config.ComponentAppId // 第三方平台 appid
-	param["authorization_code"] = authorizationCode    // 授权码, 会在授权成功时返回给第三方平台
+	param["component_appid"] = c.GetComponentAppId() // 第三方平台 appid
+	param["authorization_code"] = authorizationCode  // 授权码, 会在授权成功时返回给第三方平台
 	params := gorequest.NewParamsWith(param)
 	// 请求
 	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_query_auth?component_access_token=%v", c.GetComponentAccessToken(ctx)), params, http.MethodPost)

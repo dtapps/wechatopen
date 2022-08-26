@@ -8,7 +8,7 @@ import (
 
 // 微信后台推送的ticke
 func (c *Client) getComponentVerifyTicketCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:component_verify_ticket:%v", c.config.ComponentAppId)
+	return fmt.Sprintf("wechat_open:component_verify_ticket:%v", c.GetComponentAppId())
 }
 
 // SetComponentVerifyTicket 设置微信后台推送的ticke
@@ -16,22 +16,22 @@ func (c *Client) SetComponentVerifyTicket(ctx context.Context, componentVerifyTi
 	if componentVerifyTicket == "" {
 		return ""
 	}
-	c.redisClient.Set(ctx, c.getComponentVerifyTicketCacheKeyName(), componentVerifyTicket, time.Hour*12)
+	c.cache.redisClient.Set(ctx, c.getComponentVerifyTicketCacheKeyName(), componentVerifyTicket, time.Hour*12)
 	return c.GetComponentVerifyTicket(ctx)
 }
 
 // GetComponentVerifyTicket 获取微信后台推送的ticke
 func (c *Client) GetComponentVerifyTicket(ctx context.Context) string {
-	if c.redisClient.Db == nil {
-		return c.config.ComponentVerifyTicket
+	if c.cache.redisClient.Db == nil {
+		return c.config.componentVerifyTicket
 	}
-	result, _ := c.redisClient.Get(ctx, c.getComponentVerifyTicketCacheKeyName()).Result()
+	result, _ := c.cache.redisClient.Get(ctx, c.getComponentVerifyTicketCacheKeyName()).Result()
 	return result
 }
 
 // 令牌
 func (c *Client) getComponentAccessTokenCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:component_access_token:%v", c.config.ComponentAppId)
+	return fmt.Sprintf("wechat_open:component_access_token:%v", c.GetComponentAppId())
 }
 
 // SetComponentAccessToken 设置令牌
@@ -39,16 +39,16 @@ func (c *Client) SetComponentAccessToken(ctx context.Context, componentAccessTok
 	if componentAccessToken == "" {
 		return ""
 	}
-	c.redisClient.Set(ctx, c.getComponentAccessTokenCacheKeyName(), componentAccessToken, time.Second*7200)
+	c.cache.redisClient.Set(ctx, c.getComponentAccessTokenCacheKeyName(), componentAccessToken, time.Second*7200)
 	return c.GetComponentAccessToken(ctx)
 }
 
 // GetComponentAccessToken 获取令牌
 func (c *Client) GetComponentAccessToken(ctx context.Context) string {
-	if c.redisClient.Db == nil {
-		return c.config.ComponentAccessToken
+	if c.cache.redisClient.Db == nil {
+		return c.config.componentAccessToken
 	}
-	result, _ := c.redisClient.Db.Get(ctx, c.getComponentAccessTokenCacheKeyName()).Result()
+	result, _ := c.cache.redisClient.Db.Get(ctx, c.getComponentAccessTokenCacheKeyName()).Result()
 	return result
 }
 
@@ -67,7 +67,7 @@ func (c *Client) MonitorComponentAccessToken(ctx context.Context) string {
 
 // 授权方令牌
 func (c *Client) getAuthorizerAccessTokenCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:authorizer_access_token:%v:%v", c.config.ComponentAppId, c.config.AuthorizerAppid)
+	return fmt.Sprintf("wechat_open:authorizer_access_token:%v:%v", c.GetComponentAppId(), c.GetAuthorizerAppid())
 }
 
 // SetAuthorizerAccessToken 设置授权方令牌
@@ -75,16 +75,16 @@ func (c *Client) SetAuthorizerAccessToken(ctx context.Context, authorizerAccessT
 	if authorizerAccessToken == "" {
 		return ""
 	}
-	c.redisClient.Set(ctx, c.getAuthorizerAccessTokenCacheKeyName(), authorizerAccessToken, time.Hour*2)
+	c.cache.redisClient.Set(ctx, c.getAuthorizerAccessTokenCacheKeyName(), authorizerAccessToken, time.Hour*2)
 	return c.GetComponentAccessToken(ctx)
 }
 
 // GetAuthorizerAccessToken 获取授权方令牌
 func (c *Client) GetAuthorizerAccessToken(ctx context.Context) string {
-	if c.redisClient.Db == nil {
-		return c.config.AuthorizerAccessToken
+	if c.cache.redisClient.Db == nil {
+		return c.config.authorizerAccessToken
 	}
-	result, _ := c.redisClient.Get(ctx, c.getAuthorizerAccessTokenCacheKeyName()).Result()
+	result, _ := c.cache.redisClient.Get(ctx, c.getAuthorizerAccessTokenCacheKeyName()).Result()
 	return result
 }
 
@@ -102,7 +102,7 @@ func (c *Client) MonitorAuthorizerAccessToken(ctx context.Context, authorizerRef
 
 // 预授权码
 func (c *Client) getPreAuthCodeCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:pre_auth_code:%v", c.config.ComponentAppId)
+	return fmt.Sprintf("wechat_open:pre_auth_code:%v", c.GetComponentAppId())
 }
 
 // SetPreAuthCode 设置预授权码
@@ -110,22 +110,22 @@ func (c *Client) SetPreAuthCode(ctx context.Context, preAuthCode string) string 
 	if preAuthCode == "" {
 		return ""
 	}
-	c.redisClient.Set(ctx, c.getPreAuthCodeCacheKeyName(), preAuthCode, time.Second*1700)
+	c.cache.redisClient.Set(ctx, c.getPreAuthCodeCacheKeyName(), preAuthCode, time.Second*1700)
 	return c.GetComponentAccessToken(ctx)
 }
 
 // GetPreAuthCode 获取预授权码
 func (c *Client) GetPreAuthCode(ctx context.Context) string {
-	if c.redisClient.Db == nil {
-		return c.config.AuthorizerAccessToken
+	if c.cache.redisClient.Db == nil {
+		return c.config.authorizerAccessToken
 	}
-	result, _ := c.redisClient.Get(ctx, c.getPreAuthCodeCacheKeyName()).Result()
+	result, _ := c.cache.redisClient.Get(ctx, c.getPreAuthCodeCacheKeyName()).Result()
 	return result
 }
 
 // DelPreAuthCode 删除预授权码
 func (c *Client) DelPreAuthCode(ctx context.Context) error {
-	return c.redisClient.Del(ctx, c.getPreAuthCodeCacheKeyName()).Err()
+	return c.cache.redisClient.Del(ctx, c.getPreAuthCodeCacheKeyName()).Err()
 }
 
 // MonitorPreAuthCode 监控预授权码

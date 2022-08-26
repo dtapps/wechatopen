@@ -30,8 +30,8 @@ func newCgiBinComponentApiStartPushTicketResult(result CgiBinComponentApiStartPu
 func (c *Client) CgiBinComponentApiStartPushTicket(ctx context.Context) *CgiBinComponentApiStartPushTicketResult {
 	// 参数
 	param := gorequest.NewParams()
-	param["component_appid"] = c.config.ComponentAppId      // 平台型第三方平台的appid
-	param["component_secret"] = c.config.ComponentAppSecret // 平台型第三方平台的APPSECRET
+	param["component_appid"] = c.GetComponentAppId()      // 平台型第三方平台的appid
+	param["component_secret"] = c.GetComponentAppSecret() // 平台型第三方平台的APPSECRET
 	params := gorequest.NewParamsWith(param)
 	// 请求
 	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/api_start_push_ticket", params, http.MethodPost)

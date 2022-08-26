@@ -6,64 +6,84 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
-type ConfigClient struct {
-	ComponentAccessToken   string // 第三方平台 access_token
-	ComponentVerifyTicket  string // 微信后台推送的 ticket
-	PreAuthCode            string // 预授权码
-	AuthorizerAccessToken  string // 接口调用令牌
-	AuthorizerRefreshToken string // 刷新令牌
-	AuthorizerAppid        string // 授权方 appid
-	ComponentAppId         string // 第三方平台 appid
-	ComponentAppSecret     string // 第三方平台 app_secret
-	MessageToken           string
-	MessageKey             string
-	RedisClient            *dorm.RedisClient // 缓存数据库
-	GormClient             *dorm.GormClient  // 日志数据库
-	LogClient              *golog.ZapLog     // 日志驱动
-	LogDebug               bool              // 日志开关
-}
-
-// Client 微信公众号服务
+// Client 实例
 type Client struct {
-	requestClient *gorequest.App    // 请求服务
-	redisClient   *dorm.RedisClient // 缓存服务
-	logClient     *golog.ApiClient  // 日志服务
-	config        *ConfigClient     // 配置
+	requestClient *gorequest.App // 请求服务
+	config        struct {
+		componentAccessToken   string // 第三方平台 access_token
+		componentVerifyTicket  string // 微信后台推送的 ticket
+		preAuthCode            string // 预授权码
+		authorizerAccessToken  string // 接口调用令牌
+		authorizerRefreshToken string // 刷新令牌
+		authorizerAppid        string // 授权方 appid
+		componentAppId         string // 第三方平台appid
+		componentAppSecret     string // 第三方平台app_secret
+		messageToken           string
+		messageKey             string
+	}
+	cache struct {
+		redisClient *dorm.RedisClient // 缓存数据库
+	}
+	log struct {
+		gormClient     *dorm.GormClient  // 日志数据库
+		gorm           bool              // 日志开关
+		logGormClient  *golog.ApiClient  // 日志服务
+		mongoClient    *dorm.MongoClient // 日志数据库
+		mongo          bool              // 日志开关
+		logMongoClient *golog.ApiClient  // 日志服务
+	}
 }
 
-func NewClient(config *ConfigClient) (*Client, error) {
+// client *dorm.GormClient
+type gormClientFun func() *dorm.GormClient
+
+// client *dorm.MongoClient
+// databaseName string
+type mongoClientFun func() (*dorm.MongoClient, string)
+
+// NewClient 创建实例化
+// componentAppId 第三方平台appid
+// componentAppSecret 第三方平台app_secret
+// messageToken
+// messageKey
+// redisClient 缓存数据库
+func NewClient(componentAppId, componentAppSecret, messageToken, messageKey string, redisClient *dorm.RedisClient, gormClientFun gormClientFun, mongoClientFun mongoClientFun, debug bool) (*Client, error) {
 
 	var err error
-	c := &Client{config: config}
+	c := &Client{}
+
+	c.config.componentAppId = componentAppId
+	c.config.componentAppSecret = componentAppSecret
+	c.config.messageToken = messageToken
+	c.config.messageKey = messageKey
 
 	c.requestClient = gorequest.NewHttp()
 
-	c.redisClient = config.RedisClient
-
-	if c.config.GormClient.Db != nil {
-		c.logClient, err = golog.NewApiClient(&golog.ApiClientConfig{
-			GormClient: c.config.GormClient,
-			TableName:  logTable,
-			LogClient:  c.config.LogClient,
-			LogDebug:   c.config.LogDebug,
-		})
+	gormClient := gormClientFun()
+	if gormClient.Db != nil {
+		c.log.logGormClient, err = golog.NewApiGormClient(func() (client *dorm.GormClient, tableName string) {
+			return gormClient, logTable
+		}, debug)
 		if err != nil {
 			return nil, err
 		}
+		c.log.gorm = true
 	}
+	c.log.gormClient = gormClient
+
+	mongoClient, databaseName := mongoClientFun()
+	if mongoClient.Db != nil {
+		c.log.logMongoClient, err = golog.NewApiMongoClient(func() (*dorm.MongoClient, string, string) {
+			return mongoClient, databaseName, logTable
+		}, debug)
+		if err != nil {
+			return nil, err
+		}
+		c.log.mongo = true
+	}
+	c.log.mongoClient = mongoClient
+
+	c.cache.redisClient = redisClient
 
 	return c, nil
-}
-
-// ConfigComponent 配置
-func (c *Client) ConfigComponent(componentAppId, componentAppSecret string) *Client {
-	c.config.ComponentAppId = componentAppId
-	c.config.ComponentAppSecret = componentAppSecret
-	return c
-}
-
-// ConfigAuthorizer 配置第三方
-func (c *Client) ConfigAuthorizer(authorizerAppid string) *Client {
-	c.config.AuthorizerAppid = authorizerAppid
-	return c
 }
