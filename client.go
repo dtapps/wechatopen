@@ -6,6 +6,26 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
+// client *dorm.GormClient
+type gormClientFun func() *dorm.GormClient
+
+// client *dorm.MongoClient
+// databaseName string
+type mongoClientFun func() (*dorm.MongoClient, string)
+
+// ClientConfig 实例配置
+type ClientConfig struct {
+	AuthorizerAppid    string // 授权方 appid
+	ComponentAppId     string // 第三方平台 appid
+	ComponentAppSecret string // 第三方平台 app_secret
+	MessageToken       string
+	MessageKey         string
+	RedisClient        *dorm.RedisClient // 缓存数据库
+	GormClientFun      gormClientFun     // 日志配置
+	MongoClientFun     mongoClientFun    // 日志配置
+	Debug              bool              // 日志开关
+}
+
 // Client 实例
 type Client struct {
 	requestClient *gorequest.App // 请求服务
@@ -34,36 +54,24 @@ type Client struct {
 	}
 }
 
-// client *dorm.GormClient
-type gormClientFun func() *dorm.GormClient
-
-// client *dorm.MongoClient
-// databaseName string
-type mongoClientFun func() (*dorm.MongoClient, string)
-
 // NewClient 创建实例化
-// componentAppId 第三方平台appid
-// componentAppSecret 第三方平台app_secret
-// messageToken
-// messageKey
-// redisClient 缓存数据库
-func NewClient(componentAppId, componentAppSecret, messageToken, messageKey string, redisClient *dorm.RedisClient, gormClientFun gormClientFun, mongoClientFun mongoClientFun, debug bool) (*Client, error) {
+func NewClient(config *ClientConfig) (*Client, error) {
 
 	var err error
 	c := &Client{}
 
-	c.config.componentAppId = componentAppId
-	c.config.componentAppSecret = componentAppSecret
-	c.config.messageToken = messageToken
-	c.config.messageKey = messageKey
+	c.config.componentAppId = config.ComponentAppId
+	c.config.componentAppSecret = config.ComponentAppSecret
+	c.config.messageToken = config.MessageToken
+	c.config.messageKey = config.MessageKey
 
 	c.requestClient = gorequest.NewHttp()
 
-	gormClient := gormClientFun()
+	gormClient := config.GormClientFun()
 	if gormClient.Db != nil {
 		c.log.logGormClient, err = golog.NewApiGormClient(func() (*dorm.GormClient, string) {
 			return gormClient, logTable
-		}, debug)
+		}, config.Debug)
 		if err != nil {
 			return nil, err
 		}
@@ -71,11 +79,11 @@ func NewClient(componentAppId, componentAppSecret, messageToken, messageKey stri
 	}
 	c.log.gormClient = gormClient
 
-	mongoClient, databaseName := mongoClientFun()
+	mongoClient, databaseName := config.MongoClientFun()
 	if mongoClient.Db != nil {
 		c.log.logMongoClient, err = golog.NewApiMongoClient(func() (*dorm.MongoClient, string, string) {
 			return mongoClient, databaseName, logTable
-		}, debug)
+		}, config.Debug)
 		if err != nil {
 			return nil, err
 		}
@@ -83,7 +91,7 @@ func NewClient(componentAppId, componentAppSecret, messageToken, messageKey stri
 	}
 	c.log.mongoClient = mongoClient
 
-	c.cache.redisClient = redisClient
+	c.cache.redisClient = config.RedisClient
 
 	return c, nil
 }
