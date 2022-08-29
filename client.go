@@ -13,17 +13,25 @@ type gormClientFun func() *dorm.GormClient
 // databaseName string
 type mongoClientFun func() (*dorm.MongoClient, string)
 
+// 缓存前缀
+// wechat_open:component_verify_ticket:
+// wechat_open:component_access_token:
+// wechat_open:authorizer_access_token:
+// wechat_open:pre_auth_code:
+type redisCachePrefixFun func() (componentVerifyTicket, componentAccessToken, authorizerAccessToken, preAuthCode string)
+
 // ClientConfig 实例配置
 type ClientConfig struct {
-	AuthorizerAppid    string // 授权方 appid
-	ComponentAppId     string // 第三方平台 appid
-	ComponentAppSecret string // 第三方平台 app_secret
-	MessageToken       string
-	MessageKey         string
-	RedisClient        *dorm.RedisClient // 缓存数据库
-	GormClientFun      gormClientFun     // 日志配置
-	MongoClientFun     mongoClientFun    // 日志配置
-	Debug              bool              // 日志开关
+	AuthorizerAppid     string // 授权方 appid
+	ComponentAppId      string // 第三方平台 appid
+	ComponentAppSecret  string // 第三方平台 app_secret
+	MessageToken        string
+	MessageKey          string
+	RedisClient         *dorm.RedisClient   // 缓存数据库
+	GormClientFun       gormClientFun       // 日志配置
+	MongoClientFun      mongoClientFun      // 日志配置
+	Debug               bool                // 日志开关
+	RedisCachePrefixFun redisCachePrefixFun // 缓存前缀
 }
 
 // Client 实例
@@ -42,7 +50,11 @@ type Client struct {
 		messageKey             string
 	}
 	cache struct {
-		redisClient *dorm.RedisClient // 缓存数据库
+		redisClient                 *dorm.RedisClient // 缓存数据库
+		componentVerifyTicketPrefix string
+		componentAccessTokenPrefix  string
+		authorizerAccessTokenPrefix string
+		preAuthCodePrefix           string
 	}
 	log struct {
 		gorm           bool              // 日志开关
@@ -92,6 +104,11 @@ func NewClient(config *ClientConfig) (*Client, error) {
 	}
 
 	c.cache.redisClient = config.RedisClient
+
+	c.cache.componentVerifyTicketPrefix, c.cache.componentAccessTokenPrefix, c.cache.authorizerAccessTokenPrefix, c.cache.preAuthCodePrefix = config.RedisCachePrefixFun()
+	if c.cache.componentVerifyTicketPrefix == "" || c.cache.componentAccessTokenPrefix == "" || c.cache.authorizerAccessTokenPrefix == "" || c.cache.preAuthCodePrefix == "" {
+		return nil, RedisCachePrefixNoConfig
+	}
 
 	return c, nil
 }

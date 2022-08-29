@@ -2,13 +2,12 @@ package wechatopen
 
 import (
 	"context"
-	"fmt"
 	"time"
 )
 
 // 微信后台推送的ticke
 func (c *Client) getComponentVerifyTicketCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:component_verify_ticket:%v", c.GetComponentAppId())
+	return c.cache.componentVerifyTicketPrefix + c.GetComponentAppId()
 }
 
 // SetComponentVerifyTicket 设置微信后台推送的ticke
@@ -31,7 +30,7 @@ func (c *Client) GetComponentVerifyTicket(ctx context.Context) string {
 
 // 令牌
 func (c *Client) getComponentAccessTokenCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:component_access_token:%v", c.GetComponentAppId())
+	return c.cache.componentAccessTokenPrefix + c.GetComponentAppId()
 }
 
 // SetComponentAccessToken 设置令牌
@@ -67,7 +66,7 @@ func (c *Client) MonitorComponentAccessToken(ctx context.Context) string {
 
 // 授权方令牌
 func (c *Client) getAuthorizerAccessTokenCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:authorizer_access_token:%v:%v", c.GetComponentAppId(), c.GetAuthorizerAppid())
+	return c.cache.authorizerAccessTokenPrefix + c.GetComponentAppId() + c.GetAuthorizerAppid()
 }
 
 // SetAuthorizerAccessToken 设置授权方令牌
@@ -102,7 +101,7 @@ func (c *Client) MonitorAuthorizerAccessToken(ctx context.Context, authorizerRef
 
 // 预授权码
 func (c *Client) getPreAuthCodeCacheKeyName() string {
-	return fmt.Sprintf("wechat_open:pre_auth_code:%v", c.GetComponentAppId())
+	return c.cache.preAuthCodePrefix + c.GetComponentAppId()
 }
 
 // SetPreAuthCode 设置预授权码
