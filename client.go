@@ -107,7 +107,7 @@ func NewClient(config *ClientConfig) (*Client, error) {
 
 	c.cache.componentVerifyTicketPrefix, c.cache.componentAccessTokenPrefix, c.cache.authorizerAccessTokenPrefix, c.cache.preAuthCodePrefix = config.RedisCachePrefixFun()
 	if c.cache.componentVerifyTicketPrefix == "" || c.cache.componentAccessTokenPrefix == "" || c.cache.authorizerAccessTokenPrefix == "" || c.cache.preAuthCodePrefix == "" {
-		return nil, RedisCachePrefixNoConfig
+		return nil, redisCachePrefixNoConfig
 	}
 
 	return c, nil

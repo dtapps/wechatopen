@@ -1,6 +1,6 @@
 package wechatopen
 
-//func (c *Client) GetComponentAppId() string {
+//func (c *Client) GetComponentAccessToken() string {
 //	return c.config.componentAccessToken
 //}
 

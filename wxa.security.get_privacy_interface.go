@@ -28,24 +28,34 @@ type WxaSecurityGetPrivacyInterfaceResult struct {
 	Result WxaSecurityGetPrivacyInterfaceResponse // 结果
 	Body   []byte                                 // 内容
 	Http   gorequest.Response                     // 请求
-	Err    error                                  // 错误
 }
 
-func newWxaSecurityGetPrivacyInterfaceResult(result WxaSecurityGetPrivacyInterfaceResponse, body []byte, http gorequest.Response, err error) *WxaSecurityGetPrivacyInterfaceResult {
-	return &WxaSecurityGetPrivacyInterfaceResult{Result: result, Body: body, Http: http, Err: err}
+func newWxaSecurityGetPrivacyInterfaceResult(result WxaSecurityGetPrivacyInterfaceResponse, body []byte, http gorequest.Response) *WxaSecurityGetPrivacyInterfaceResult {
+	return &WxaSecurityGetPrivacyInterfaceResult{Result: result, Body: body, Http: http}
 }
 
 // WxaSecurityGetPrivacyInterface 获取接口列表
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/apply_api/get_privacy_interface.html
-func (c *Client) WxaSecurityGetPrivacyInterface(ctx context.Context) *WxaSecurityGetPrivacyInterfaceResult {
+func (c *Client) WxaSecurityGetPrivacyInterface(ctx context.Context) (*WxaSecurityGetPrivacyInterfaceResult, error) {
+	// 检查
+	err := c.checkComponentIsConfig()
+	if err != nil {
+		return nil, err
+	}
 	// 参数
 	params := gorequest.NewParams()
 	// 请求
 	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/security/get_privacy_interface?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
 	// 定义
 	var response WxaSecurityGetPrivacyInterfaceResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return newWxaSecurityGetPrivacyInterfaceResult(response, request.ResponseBody, request, err)
+	if err != nil {
+		return nil, err
+	}
+	return newWxaSecurityGetPrivacyInterfaceResult(response, request.ResponseBody, request), nil
 }
 
 // ErrcodeInfo 错误描述

@@ -16,16 +16,20 @@ type CgiBinComponentApiComponentTokenResult struct {
 	Result CgiBinComponentApiComponentTokenResponse // 结果
 	Body   []byte                                   // 内容
 	Http   gorequest.Response                       // 请求
-	Err    error                                    // 错误
 }
 
-func newCgiBinComponentApiComponentTokenResult(result CgiBinComponentApiComponentTokenResponse, body []byte, http gorequest.Response, err error) *CgiBinComponentApiComponentTokenResult {
-	return &CgiBinComponentApiComponentTokenResult{Result: result, Body: body, Http: http, Err: err}
+func newCgiBinComponentApiComponentTokenResult(result CgiBinComponentApiComponentTokenResponse, body []byte, http gorequest.Response) *CgiBinComponentApiComponentTokenResult {
+	return &CgiBinComponentApiComponentTokenResult{Result: result, Body: body, Http: http}
 }
 
 // CgiBinComponentApiComponentToken 令牌
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_access_token.html
-func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context) *CgiBinComponentApiComponentTokenResult {
+func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context) (*CgiBinComponentApiComponentTokenResult, error) {
+	// 检查
+	err := c.checkComponentIsConfig()
+	if err != nil {
+		return nil, err
+	}
 	// 参数
 	param := gorequest.NewParams()
 	param["component_appid"] = c.GetComponentAppId()                   // 第三方平台 appid
@@ -34,8 +38,14 @@ func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context) *CgiBinCo
 	params := gorequest.NewParamsWith(param)
 	// 请求
 	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/api_component_token", params, http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
 	// 定义
 	var response CgiBinComponentApiComponentTokenResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return newCgiBinComponentApiComponentTokenResult(response, request.ResponseBody, request, err)
+	if err != nil {
+		return nil, err
+	}
+	return newCgiBinComponentApiComponentTokenResult(response, request.ResponseBody, request), nil
 }

@@ -17,24 +17,34 @@ type WxaModifyDomainDirectlyResult struct {
 	Result WxaModifyDomainDirectlyResponse // 结果
 	Body   []byte                          // 内容
 	Http   gorequest.Response              // 请求
-	Err    error                           // 错误
 }
 
-func newWxaModifyDomainDirectlyResult(result WxaModifyDomainDirectlyResponse, body []byte, http gorequest.Response, err error) *WxaModifyDomainDirectlyResult {
-	return &WxaModifyDomainDirectlyResult{Result: result, Body: body, Http: http, Err: err}
+func newWxaModifyDomainDirectlyResult(result WxaModifyDomainDirectlyResponse, body []byte, http gorequest.Response) *WxaModifyDomainDirectlyResult {
+	return &WxaModifyDomainDirectlyResult{Result: result, Body: body, Http: http}
 }
 
 // WxaModifyDomainDirectly 快速设置小程序服务器域名
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/modify_domain_directly.html
-func (c *Client) WxaModifyDomainDirectly(ctx context.Context, notMustParams ...gorequest.Params) *WxaModifyDomainDirectlyResult {
+func (c *Client) WxaModifyDomainDirectly(ctx context.Context, notMustParams ...gorequest.Params) (*WxaModifyDomainDirectlyResult, error) {
+	// 检查
+	err := c.checkComponentIsConfig()
+	if err != nil {
+		return nil, err
+	}
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
 	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/modify_domain_directly?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
 	// 定义
 	var response WxaModifyDomainDirectlyResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return newWxaModifyDomainDirectlyResult(response, request.ResponseBody, request, err)
+	if err != nil {
+		return nil, err
+	}
+	return newWxaModifyDomainDirectlyResult(response, request.ResponseBody, request), nil
 }
 
 // ErrcodeInfo 错误描述

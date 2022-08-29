@@ -52,16 +52,20 @@ func (c *Client) GetComponentAccessToken(ctx context.Context) string {
 }
 
 // MonitorComponentAccessToken 监控令牌
-func (c *Client) MonitorComponentAccessToken(ctx context.Context) string {
+func (c *Client) MonitorComponentAccessToken(ctx context.Context) (string, error) {
 	// 查询
 	componentAccessToken := c.GetComponentAccessToken(ctx)
 	// 判断
-	result := c.CgiBinGetApiDomainIp(ctx, componentAccessToken)
+	result, err := c.CgiBinGetApiDomainIp(ctx, componentAccessToken)
+	if err != nil {
+		return "", err
+	}
 	if len(result.Result.IpList) > 0 {
-		return componentAccessToken
+		return componentAccessToken, err
 	}
 	// 重新获取
-	return c.SetComponentAccessToken(ctx, c.CgiBinComponentApiComponentToken(ctx).Result.ComponentAccessToken)
+	resp, err := c.CgiBinComponentApiComponentToken(ctx)
+	return c.SetComponentAccessToken(ctx, resp.Result.ComponentAccessToken), err
 }
 
 // 授权方令牌
@@ -88,15 +92,16 @@ func (c *Client) GetAuthorizerAccessToken(ctx context.Context) string {
 }
 
 // MonitorAuthorizerAccessToken 监控授权方令牌
-func (c *Client) MonitorAuthorizerAccessToken(ctx context.Context, authorizerRefreshToken string) string {
+func (c *Client) MonitorAuthorizerAccessToken(ctx context.Context, authorizerRefreshToken string) (string, error) {
 	// 查询
 	authorizerAccessToken := c.GetAuthorizerAccessToken(ctx)
 	// 判断
 	if authorizerAccessToken != "" {
-		return authorizerAccessToken
+		return authorizerAccessToken, nil
 	}
 	// 重新获取
-	return c.SetAuthorizerAccessToken(ctx, c.CgiBinComponentApiAuthorizerToken(ctx, authorizerRefreshToken).Result.AuthorizerAccessToken)
+	resp, err := c.CgiBinComponentApiAuthorizerToken(ctx, authorizerRefreshToken)
+	return c.SetAuthorizerAccessToken(ctx, resp.Result.AuthorizerAccessToken), err
 }
 
 // 预授权码
@@ -128,13 +133,14 @@ func (c *Client) DelPreAuthCode(ctx context.Context) error {
 }
 
 // MonitorPreAuthCode 监控预授权码
-func (c *Client) MonitorPreAuthCode(ctx context.Context) string {
+func (c *Client) MonitorPreAuthCode(ctx context.Context) (string, error) {
 	// 查询
 	preAuthCode := c.GetPreAuthCode(ctx)
 	// 判断
 	if preAuthCode != "" {
-		return preAuthCode
+		return preAuthCode, nil
 	}
 	// 重新获取
-	return c.SetPreAuthCode(ctx, c.CgiBinComponentApiCreatePreAuthCoden(ctx).Result.PreAuthCode)
+	resp, err := c.CgiBinComponentApiCreatePreAuthCoden(ctx)
+	return c.SetPreAuthCode(ctx, resp.Result.PreAuthCode), err
 }

@@ -26,25 +26,39 @@ type WxaBusinessGetUserPhoneNumberResult struct {
 	Result WxaBusinessGetUserPhoneNumberResponse // 结果
 	Body   []byte                                // 内容
 	Http   gorequest.Response                    // 请求
-	Err    error                                 // 错误
 }
 
-func newWxaBusinessGetUserPhoneNumberResult(result WxaBusinessGetUserPhoneNumberResponse, body []byte, http gorequest.Response, err error) *WxaBusinessGetUserPhoneNumberResult {
-	return &WxaBusinessGetUserPhoneNumberResult{Result: result, Body: body, Http: http, Err: err}
+func newWxaBusinessGetUserPhoneNumberResult(result WxaBusinessGetUserPhoneNumberResponse, body []byte, http gorequest.Response) *WxaBusinessGetUserPhoneNumberResult {
+	return &WxaBusinessGetUserPhoneNumberResult{Result: result, Body: body, Http: http}
 }
 
 // WxaBusinessGetUserPhoneNumber code换取用户手机号。 每个 code 只能使用一次，code的有效期为5min
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/phonenumber/phonenumber.getPhoneNumber.html
-func (c *Client) WxaBusinessGetUserPhoneNumber(ctx context.Context, code string) *WxaBusinessGetUserPhoneNumberResult {
+func (c *Client) WxaBusinessGetUserPhoneNumber(ctx context.Context, code string) (*WxaBusinessGetUserPhoneNumberResult, error) {
+	// 检查
+	err := c.checkComponentIsConfig()
+	if err != nil {
+		return nil, err
+	}
+	err = c.checkAuthorizerIsConfig()
+	if err != nil {
+		return nil, err
+	}
 	// 参数
 	params := gorequest.NewParams()
 	params.Set("code", code)
 	// 请求
 	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/business/getuserphonenumber?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
 	// 定义
 	var response WxaBusinessGetUserPhoneNumberResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return newWxaBusinessGetUserPhoneNumberResult(response, request.ResponseBody, request, err)
+	if err != nil {
+		return nil, err
+	}
+	return newWxaBusinessGetUserPhoneNumberResult(response, request.ResponseBody, request), nil
 }
 
 // ErrcodeInfo 错误描述
