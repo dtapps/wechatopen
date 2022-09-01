@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/mitchellh/mapstructure v1.5.0
 	go.dtapp.net/dorm v1.0.30
-	go.dtapp.net/golog v1.0.44
+	go.dtapp.net/golog v1.0.45
 	go.dtapp.net/gorequest v1.0.27
 )
 
@@ -57,10 +57,10 @@ require (
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/upper/db/v4 v4.5.4 // indirect
-	github.com/uptrace/bun v1.1.7 // indirect
-	github.com/uptrace/bun/dialect/mysqldialect v1.1.7 // indirect
-	github.com/uptrace/bun/dialect/pgdialect v1.1.7 // indirect
-	github.com/uptrace/bun/driver/pgdriver v1.1.7 // indirect
+	github.com/uptrace/bun v1.1.8 // indirect
+	github.com/uptrace/bun/dialect/mysqldialect v1.1.8 // indirect
+	github.com/uptrace/bun/dialect/pgdialect v1.1.8 // indirect
+	github.com/uptrace/bun/driver/pgdriver v1.1.8 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -69,7 +69,7 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	go.dtapp.net/goip v1.0.28 // indirect
 	go.dtapp.net/gorandom v1.0.1 // indirect
-	go.dtapp.net/gostring v1.0.9 // indirect
+	go.dtapp.net/gostring v1.0.10 // indirect
 	go.dtapp.net/gotime v1.0.5 // indirect
 	go.dtapp.net/gotrace_id v1.0.6 // indirect
 	go.dtapp.net/gourl v1.0.0 // indirect
@@ -78,11 +78,11 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
-	golang.org/x/crypto v0.0.0-20220826181053-bd7e27e6170d // indirect
+	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect
-	golang.org/x/sys v0.0.0-20220825204002-c680a09ffe64 // indirect
+	golang.org/x/sys v0.0.0-20220829200755-d48e67d00261 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

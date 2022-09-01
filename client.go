@@ -81,9 +81,12 @@ func NewClient(config *ClientConfig) (*Client, error) {
 
 	gormClient := config.GormClientFun()
 	if gormClient != nil && gormClient.Db != nil {
-		c.log.logGormClient, err = golog.NewApiGormClient(func() (*dorm.GormClient, string) {
-			return gormClient, logTable
-		}, config.Debug)
+		c.log.logGormClient, err = golog.NewApiGormClient(&golog.ApiGormClientConfig{
+			GormClientFun: func() (*dorm.GormClient, string) {
+				return gormClient, logTable
+			},
+			Debug: config.Debug,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -93,9 +96,12 @@ func NewClient(config *ClientConfig) (*Client, error) {
 
 	mongoClient, databaseName := config.MongoClientFun()
 	if mongoClient != nil && mongoClient.Db != nil {
-		c.log.logMongoClient, err = golog.NewApiMongoClient(func() (*dorm.MongoClient, string, string) {
-			return mongoClient, databaseName, logTable
-		}, config.Debug)
+		c.log.logMongoClient, err = golog.NewApiMongoClient(&golog.ApiMongoClientConfig{
+			MongoClientFun: func() (*dorm.MongoClient, string, string) {
+				return mongoClient, databaseName, logTable
+			},
+			Debug: config.Debug,
+		})
 		if err != nil {
 			return nil, err
 		}
