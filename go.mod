@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/mitchellh/mapstructure v1.5.0
 	go.dtapp.net/dorm v1.0.30
-	go.dtapp.net/golog v1.0.48
+	go.dtapp.net/golog v1.0.49
 	go.dtapp.net/gorequest v1.0.27
 )
 
