@@ -48,7 +48,7 @@ func (c *Client) WxaGetQrcode(ctx context.Context, path string) (*WxaGetQrcodeRe
 	// 定义
 	var response WxaGetQrcodeResponse
 	// 判断内容是否为图片
-	if request.ResponseHeader.Get("Content-Type") == "image/jpeg" || request.ResponseHeader.Get("Content-Type") == "image/png" || request.ResponseHeader.Get("Content-Type") == "image/jpg" {
+	if request.HeaderIsImg() {
 	} else {
 		err = json.Unmarshal(request.ResponseBody, &response)
 		if err != nil {
