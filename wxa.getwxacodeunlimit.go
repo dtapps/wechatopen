@@ -46,9 +46,13 @@ func (c *Client) WxaGetWxaCodeUnLimit(ctx context.Context, notMustParams ...gore
 	}
 	// 定义
 	var response WxaGetWxaCodeUnLimitResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
+	// 判断内容是否为图片
+	if request.HeaderIsImg() {
+	} else {
+		err = json.Unmarshal(request.ResponseBody, &response)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return newWxaGetWxaCodeUnLimitResult(response, request.ResponseBody, request), nil
 }

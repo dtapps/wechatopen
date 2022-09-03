@@ -92,5 +92,5 @@ require (
 	gorm.io/gorm v1.23.8 // indirect
 	mellium.im/sasl v0.3.0 // indirect
 	xorm.io/builder v0.3.12 // indirect
-	xorm.io/xorm v1.3.1 // indirect
+	xorm.io/xorm v1.3.2 // indirect
 )
