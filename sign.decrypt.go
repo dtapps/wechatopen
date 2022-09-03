@@ -9,18 +9,13 @@ import (
 	"strings"
 )
 
-type SignDecryptParams struct {
-	Signature    string `json:"signature"`
-	Timestamp    string `json:"timestamp"`
-	Nonce        string `json:"nonce"`
-	EncryptType  string `json:"encrypt_type"`
-	MsgSignature string `json:"msg_signature"`
-	AppId        string `json:"app_id"`
-	Encrypt      string `json:"encrypt"`
-}
-
 // SignDecrypt 解密
-func (c *Client) SignDecrypt(ctx context.Context, params SignDecryptParams, strXml interface{}) ([]byte, error) {
+// ctx 上下文
+// params 入参
+// strXml 反射结构体
+// resp 加密数据
+// err 错误信息
+func (c *Client) SignDecrypt(ctx context.Context, params SignDecryptParams, strXml interface{}) (resp []byte, err error) {
 
 	if params.Signature == "" {
 		return nil, errors.New("找不到签名参数")

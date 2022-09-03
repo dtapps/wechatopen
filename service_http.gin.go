@@ -7,13 +7,13 @@ import (
 
 // ResponseServeHttpGin 推送信息
 type ResponseServeHttpGin struct {
-	MsgSignature string `form:"msg_signature" json:"msg_signature" xml:"msg_signature" uri:"msg_signature" binding:"omitempty"` // 签名串，对应 URL 参数的msg_signature
-	Timestamp    string `form:"timestamp" json:"timestamp" xml:"timestamp" uri:"timestamp" binding:"omitempty"`                 // 时间戳，对应 URL 参数的timestamp
-	Nonce        string `form:"nonce" json:"nonce" xml:"nonce" uri:"nonce" binding:"omitempty"`                                 // 随机串，对应 URL 参数的nonce
-	Signature    string `form:"signature" json:"signature" xml:"signature" uri:"signature" binding:"omitempty"`
-	EncryptType  string `form:"encrypt_type" json:"encrypt_type" xml:"encrypt_type" uri:"encrypt_type" binding:"omitempty"` // 加密类型
-	AppId        string `form:"AppId" json:"AppId" xml:"AppId" uri:"AppId" binding:"omitempty"`                             // 第三方平台 appid
-	Encrypt      string `form:"Encrypt" json:"Encrypt" xml:"Encrypt" uri:"Encrypt" binding:"omitempty"`                     // 加密内容
+	MsgSignature string // 签名串，对应 URL 参数的msg_signature
+	Timestamp    string // 时间戳，对应 URL 参数的timestamp
+	Nonce        string // 随机串，对应 URL 参数的nonce
+	Signature    string
+	EncryptType  string // 加密类型
+	AppId        string // 第三方平台 appid
+	Encrypt      string // 加密内容
 }
 
 // ServeHttpGin 验证票据推送
