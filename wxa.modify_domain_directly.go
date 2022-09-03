@@ -9,8 +9,21 @@ import (
 )
 
 type WxaModifyDomainDirectlyResponse struct {
-	Errcode int    `json:"errcode"` // 错误码
-	Errmsg  string `json:"errmsg"`  // 错误信息
+	Errcode                int      `json:"errcode"`                 // 错误码
+	Errmsg                 string   `json:"errmsg"`                  // 错误信息
+	Requestdomain          []string `json:"requestdomain"`           // request 合法域名
+	Wsrequestdomain        []string `json:"wsrequestdomain"`         // socket 合法域名
+	Uploaddomain           []string `json:"uploaddomain"`            // uploadFile 合法域名
+	Downloaddomain         []string `json:"downloaddomain"`          // downloadFile 合法域名
+	Udpdomain              []string `json:"udpdomain"`               // udp 合法域名
+	Tcpdomain              []string `json:"tcpdomain"`               // tcp 合法域名
+	InvalidRequestdomain   []string `json:"invalid_requestdomain"`   // request 不合法域名
+	InvalidWsrequestdomain []string `json:"invalid_wsrequestdomain"` // socket 不合法域名
+	InvalidUploaddomain    []string `json:"invalid_uploaddomain"`    // uploadFile 不合法域名
+	InvalidDownloaddomain  []string `json:"invalid_downloaddomain"`  // downloadFile 不合法域名
+	InvalidUdpdomain       []string `json:"invalid_udpdomain"`       // udp 不合法域名
+	InvalidTcpdomain       []string `json:"invalid_tcpdomain"`       // tcp 不合法域名
+	NoIcpDomain            []string `json:"no_icp_domain"`           // 没有经过icp备案的域名
 }
 
 type WxaModifyDomainDirectlyResult struct {
