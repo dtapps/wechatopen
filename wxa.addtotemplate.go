@@ -31,10 +31,6 @@ func (c *Client) WxaAddToTemplate(ctx context.Context, draftId string, templateT
 	if err != nil {
 		return nil, err
 	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
 	// 参数
 	params := gorequest.NewParams()
 	params["draft_id"] = draftId

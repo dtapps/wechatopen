@@ -33,12 +33,14 @@ type ClientConfig struct {
 	Debug               bool                // 日志开关
 	ZapLog              *golog.ZapLog       // 日志服务
 	RedisCachePrefixFun redisCachePrefixFun // 缓存前缀
+	CurrentIp           string              // 当前ip
 }
 
 // Client 实例
 type Client struct {
 	requestClient *gorequest.App // 请求服务
 	zapLog        *golog.ZapLog  // 日志服务
+	currentIp     string         // 当前ip
 	config        struct {
 		componentAccessToken   string // 第三方平台 access_token
 		componentVerifyTicket  string // 微信后台推送的 ticket
@@ -76,6 +78,8 @@ func NewClient(config *ClientConfig) (*Client, error) {
 
 	c.zapLog = config.ZapLog
 
+	c.currentIp = config.CurrentIp
+
 	c.config.componentAppId = config.ComponentAppId
 	c.config.componentAppSecret = config.ComponentAppSecret
 	c.config.messageToken = config.MessageToken
@@ -89,8 +93,9 @@ func NewClient(config *ClientConfig) (*Client, error) {
 			GormClientFun: func() (*dorm.GormClient, string) {
 				return gormClient, logTable
 			},
-			Debug:  config.Debug,
-			ZapLog: c.zapLog,
+			Debug:     config.Debug,
+			ZapLog:    c.zapLog,
+			CurrentIp: c.currentIp,
 		})
 		if err != nil {
 			return nil, err
@@ -105,8 +110,9 @@ func NewClient(config *ClientConfig) (*Client, error) {
 			MongoClientFun: func() (*dorm.MongoClient, string, string) {
 				return mongoClient, databaseName, logTable
 			},
-			Debug:  config.Debug,
-			ZapLog: c.zapLog,
+			Debug:     config.Debug,
+			ZapLog:    c.zapLog,
+			CurrentIp: c.currentIp,
 		})
 		if err != nil {
 			return nil, err
