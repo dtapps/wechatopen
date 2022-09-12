@@ -14,7 +14,7 @@ type WxaBusinessGetUserPhoneNumberResponse struct {
 	PhoneInfo struct {
 		PhoneNumber     string `json:"phoneNumber"`     // 用户绑定的手机号（国外手机号会有区号）
 		PurePhoneNumber string `json:"purePhoneNumber"` // 没有区号的手机号
-		CountryCode     int    `json:"countryCode"`     // 区号
+		CountryCode     string `json:"countryCode"`     // 区号
 		Watermark       struct {
 			Timestamp int    `json:"timestamp"` // 用户获取手机号操作的时间戳
 			Appid     string `json:"appid"`     // 小程序appid
