@@ -16,7 +16,7 @@ type WxaSecurityGetPrivacyInterfaceResponse struct {
 		ApiChName  string `json:"api_ch_name"`           // api 中文名
 		ApiDesc    string `json:"api_desc"`              // api描述
 		ApplyTime  int64  `json:"apply_time,omitempty"`  // 申请时间 ，该字段发起申请后才会有
-		Status     int    `json:"status"`                // 接口状态，该字段发起申请后才会有
+		Status     int    `json:"status,omitempty"`      // 接口状态，该字段发起申请后才会有 1待申请开通 2无权限 3申请中 4申请失败 5已开通
 		AuditId    int    `json:"audit_id,omitempty"`    // 申请单号，该字段发起申请后才会有
 		FailReason string `json:"fail_reason,omitempty"` // 申请被驳回原因或者无权限，该字段申请驳回时才会有
 		ApiLink    string `json:"api_link"`              // api文档链接
