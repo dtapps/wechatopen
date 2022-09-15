@@ -1,5 +1,7 @@
 package wechatopen
 
+import "go.dtapp.net/golog"
+
 //func (c *Client) GetComponentAccessToken() string {
 //	return c.config.componentAccessToken
 //}
@@ -38,4 +40,12 @@ func (c *Client) GetMessageToken() string {
 
 func (c *Client) GetMessageKey() string {
 	return c.config.messageKey
+}
+
+func (c *Client) GetLogGorm() *golog.ApiClient {
+	return c.log.logGormClient
+}
+
+func (c *Client) GetLogMongo() *golog.ApiClient {
+	return c.log.logMongoClient
 }
