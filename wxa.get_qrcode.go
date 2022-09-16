@@ -1,10 +1,12 @@
 package wechatopen
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"go.dtapp.net/gorequest"
+	"go.dtapp.net/gostorage"
 	"net/http"
 )
 
@@ -56,4 +58,16 @@ func (c *Client) WxaGetQrcode(ctx context.Context, path string) (*WxaGetQrcodeRe
 		}
 	}
 	return newWxaGetQrcodeResult(response, request.ResponseBody, request), nil
+}
+
+func (cr *WxaGetQrcodeResult) SaveImg(db *gostorage.AliYun, fileName, filePath string) error {
+	if cr.Result.Errcode != 0 {
+		panic(fmt.Sprintf("接口状态错误：%s", cr.Body))
+	}
+	// 上传
+	_, err := db.PutObject(bytes.NewReader(cr.Body), filePath, fileName)
+	if err != nil {
+		return err
+	}
+	return nil
 }

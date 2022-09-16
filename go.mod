@@ -8,12 +8,36 @@ require (
 	go.dtapp.net/dorm v1.0.33
 	go.dtapp.net/golog v1.0.73
 	go.dtapp.net/gorequest v1.0.31
+	go.dtapp.net/gostorage v1.0.12
 )
 
 require (
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.5+incompatible // indirect
+	github.com/aws/aws-sdk-go v1.44.99 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.16.15 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.8 // indirect
+	github.com/aws/aws-sdk-go-v2/config v1.17.6 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.12.19 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.16 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.22 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.16 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.23 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.13 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.9 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.17 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.16 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.16 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.10 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.11.22 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.13.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.16.18 // indirect
+	github.com/aws/smithy-go v1.13.3 // indirect
+	github.com/baidubce/bce-sdk-go v0.9.135 // indirect
 	github.com/basgys/goxml2json v1.1.0 // indirect
 	github.com/beego/beego/v2 v2.0.5 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
@@ -23,7 +47,9 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/huaweicloud/huaweicloud-sdk-go-obs v3.21.12+incompatible // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -34,23 +60,28 @@ require (
 	github.com/jackc/pgx/v4 v4.17.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
+	github.com/ks3sdklib/aws-sdk-go v1.1.8 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lib/pq v1.10.7 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.6.6 // indirect
+	github.com/mozillazg/go-httpheader v0.3.1 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/qiniu/go-sdk/v7 v7.13.0 // indirect
 	github.com/saracen/go7z v0.0.0-20191010121135-9c09b6bd7fda // indirect
 	github.com/saracen/solidblock v0.0.0-20190426153529-45df20abab6f // indirect
 	github.com/segmentio/fasthash v1.0.3 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.38 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
@@ -59,6 +90,7 @@ require (
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.8 // indirect
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8 // indirect
 	github.com/uptrace/bun/driver/pgdriver v1.1.8 // indirect
+	github.com/upyun/go-sdk/v3 v3.0.3 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -79,8 +111,9 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804 // indirect
-	golang.org/x/sys v0.0.0-20220913175220-63ea55921009 // indirect
+	golang.org/x/sys v0.0.0-20220915200043-7b5979e65e41 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/mysql v1.3.6 // indirect
