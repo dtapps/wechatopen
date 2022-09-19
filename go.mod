@@ -120,7 +120,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/datatypes v1.0.7 // indirect
 	gorm.io/driver/mysql v1.3.6 // indirect
-	gorm.io/driver/postgres v1.3.9 // indirect
+	gorm.io/driver/postgres v1.3.10 // indirect
 	gorm.io/gorm v1.23.9 // indirect
 	mellium.im/sasl v0.3.0 // indirect
 	xorm.io/builder v0.3.12 // indirect
