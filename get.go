@@ -42,6 +42,6 @@ func (c *Client) GetMessageKey() string {
 	return c.config.messageKey
 }
 
-func (c *Client) GetLogGorm() *golog.ApiClient {
+func (c *Client) GetLog() *golog.ApiClient {
 	return c.log.client
 }
