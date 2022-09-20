@@ -25,14 +25,12 @@ type ClientConfig struct {
 	Debug               bool                // 日志开关
 	ZapLog              *golog.ZapLog       // 日志服务
 	RedisCachePrefixFun redisCachePrefixFun // 缓存前缀
-	CurrentIp           string              // 当前ip
 }
 
 // Client 实例
 type Client struct {
 	requestClient *gorequest.App // 请求服务
 	zapLog        *golog.ZapLog  // 日志服务
-	currentIp     string         // 当前ip
 	config        struct {
 		componentAccessToken   string // 第三方平台 access_token
 		componentVerifyTicket  string // 微信后台推送的 ticket
@@ -53,7 +51,7 @@ type Client struct {
 		preAuthCodePrefix           string
 	}
 	log struct {
-		gorm   bool             // 日志开关
+		status bool             // 状态
 		client *golog.ApiClient // 日志服务
 	}
 }
@@ -65,8 +63,6 @@ func NewClient(config *ClientConfig) (*Client, error) {
 
 	c.zapLog = config.ZapLog
 
-	c.currentIp = config.CurrentIp
-
 	c.config.componentAppId = config.ComponentAppId
 	c.config.componentAppSecret = config.ComponentAppSecret
 	c.config.messageToken = config.MessageToken
@@ -77,7 +73,7 @@ func NewClient(config *ClientConfig) (*Client, error) {
 	apiGormClient := config.ApiGormClientFun()
 	if apiGormClient != nil {
 		c.log.client = apiGormClient
-		c.log.gorm = true
+		c.log.status = true
 	}
 
 	c.cache.redisClient = config.RedisClient

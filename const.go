@@ -1,7 +1,10 @@
 package wechatopen
 
 const (
-	apiUrl   = "https://api.weixin.qq.com"
+	apiUrl = "https://api.weixin.qq.com"
+)
+
+const (
 	LogTable = "wechatopen"
-	Version  = "1.0.37"
+	Version  = "1.0.38"
 )
