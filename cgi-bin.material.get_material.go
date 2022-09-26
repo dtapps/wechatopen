@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"go.dtapp.net/gorequest"
 	"go.dtapp.net/gostorage"
@@ -58,7 +59,7 @@ func (c *Client) CgiBinMaterialGetMaterial(ctx context.Context, mediaId string) 
 
 func (cr *CgiBinMaterialGetMaterialResult) SaveImg(db *gostorage.AliYun, fileName, filePath string) error {
 	if cr.Result.Errcode != 0 {
-		panic(fmt.Sprintf("接口状态错误：%s", cr.Body))
+		return errors.New(cr.Result.Errmsg)
 	}
 	// 上传
 	_, err := db.PutObject(bytes.NewReader(cr.Body), filePath, fileName)
