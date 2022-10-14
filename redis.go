@@ -70,7 +70,7 @@ func (c *Client) MonitorComponentAccessToken(ctx context.Context) (string, error
 
 // 授权方令牌
 func (c *Client) getAuthorizerAccessTokenCacheKeyName() string {
-	return c.cache.authorizerAccessTokenPrefix + c.GetComponentAppId() + c.GetAuthorizerAppid()
+	return c.cache.authorizerAccessTokenPrefix + c.GetComponentAppId() + ":" + c.GetAuthorizerAppid()
 }
 
 // SetAuthorizerAccessToken 设置授权方令牌
