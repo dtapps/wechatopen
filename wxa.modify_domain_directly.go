@@ -36,8 +36,8 @@ func newWxaModifyDomainDirectlyResult(result WxaModifyDomainDirectlyResponse, bo
 	return &WxaModifyDomainDirectlyResult{Result: result, Body: body, Http: http}
 }
 
-// WxaModifyDomainDirectly 快速设置小程序服务器域名
-// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/modify_domain_directly.html
+// WxaModifyDomainDirectly 快速配置小程序服务器域名
+// https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/modifyServerDomainDirectly.html
 func (c *Client) WxaModifyDomainDirectly(ctx context.Context, notMustParams ...gorequest.Params) (*WxaModifyDomainDirectlyResult, error) {
 	// 检查
 	err := c.checkComponentIsConfig()
