@@ -7,13 +7,13 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	go.dtapp.net/dorm v1.0.54
 	go.dtapp.net/golog v1.0.102
-	go.dtapp.net/gorequest v1.0.37
+	go.dtapp.net/gorequest v1.0.38
 	go.dtapp.net/gostorage v1.0.13
 )
 
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible // indirect
-	github.com/aws/aws-sdk-go v1.44.152 // indirect
+	github.com/aws/aws-sdk-go v1.44.153 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.17.2 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.10 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.18.4 // indirect
@@ -34,7 +34,7 @@ require (
 	github.com/aws/smithy-go v1.13.5 // indirect
 	github.com/baidubce/bce-sdk-go v0.9.138 // indirect
 	github.com/basgys/goxml2json v1.1.0 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -101,7 +101,7 @@ require (
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	go.dtapp.net/goip v1.0.39 // indirect
+	go.dtapp.net/goip v1.0.40 // indirect
 	go.dtapp.net/gorandom v1.0.1 // indirect
 	go.dtapp.net/gostring v1.0.10 // indirect
 	go.dtapp.net/gotime v1.0.5 // indirect
@@ -113,11 +113,11 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
 	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/net v0.3.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
-	golang.org/x/time v0.2.0 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/mysql v1.4.4 // indirect

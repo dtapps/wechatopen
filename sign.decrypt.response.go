@@ -114,3 +114,16 @@ type SignDecryptWeAppAudit struct {
 	Reason       string `xml:"reason,omitempty"`       // 审核不通过的原因
 	ScreenShot   string `xml:"ScreenShot,omitempty"`   // 审核不通过的截图示例。用 | 分隔的 media_id 的列表，可通过获取永久素材接口拉取截图内容
 }
+
+// SignDecryptWxaSecurityApplySetOrderPathInfo 申请设置订单页 path 信息
+// https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/basic-info-management/applySetOrderPathInfo.html
+type SignDecryptWxaSecurityApplySetOrderPathInfo struct {
+	XMLName   xml.Name
+	List      string `xml:"List,omitempty"`      // 申请结果列表
+	Appid     string `xml:"Appid,omitempty"`     // 申请的appid
+	AuditId   string `xml:"AuditId,omitempty"`   // 审核单id
+	Status    string `xml:"Status,omitempty"`    // 订单页 path 状态
+	ApplyTime int64  `xml:"ApplyTime,omitempty"` // 申请时间
+	AuditTime int64  `xml:"AuditTime,omitempty"` // 审核时间
+	Reason    string `xml:"Reason,omitempty"`    // 审核原因
+}
