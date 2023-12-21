@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -27,34 +26,21 @@ func newWxaGetWxaCodeUnLimitResult(result WxaGetWxaCodeUnLimitResponse, body []b
 
 // WxaGetWxaCodeUnLimit 获取小程序码，适用于需要的码数量极多的业务场景。通过该接口生成的小程序码，永久有效，数量暂无限制
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
-func (c *Client) WxaGetWxaCodeUnLimit(ctx context.Context, notMustParams ...gorequest.Params) (*WxaGetWxaCodeUnLimitResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaGetWxaCodeUnLimit(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetWxaCodeUnLimitResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/getwxacodeunlimit?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/wxa/getwxacodeunlimit?access_token="+authorizerAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newWxaGetWxaCodeUnLimitResult(WxaGetWxaCodeUnLimitResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaGetWxaCodeUnLimitResponse
 	// 判断内容是否为图片
-	if request.HeaderIsImg() {
-	} else {
-		err = json.Unmarshal(request.ResponseBody, &response)
-		if err != nil {
-			return nil, err
-		}
+	if request.HeaderIsImg() == false {
+		err = gojson.Unmarshal(request.ResponseBody, &response)
 	}
-	return newWxaGetWxaCodeUnLimitResult(response, request.ResponseBody, request), nil
+	return newWxaGetWxaCodeUnLimitResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述

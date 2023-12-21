@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -33,28 +32,16 @@ func newWxaGetCategoryResult(result WxaGetCategoryResponse, body []byte, http go
 
 // WxaGetCategory 获取审核时可填写的类目信息
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/get_category.html
-func (c *Client) WxaGetCategory(ctx context.Context) (*WxaGetCategoryResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaGetCategory(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetCategoryResult, error) {
 	// 参数
-	params := gorequest.NewParams()
+	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/get_category?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodGet)
+	request, err := c.request(ctx, apiUrl+"/wxa/get_category?access_token="+authorizerAccessToken, params, http.MethodGet)
 	if err != nil {
-		return nil, err
+		return newWxaGetCategoryResult(WxaGetCategoryResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaGetCategoryResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newWxaGetCategoryResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newWxaGetCategoryResult(response, request.ResponseBody, request), err
 }

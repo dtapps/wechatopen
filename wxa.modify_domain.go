@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -38,26 +37,18 @@ func newWxaModifyDomainResult(result WxaModifyDomainResponse, body []byte, http 
 
 // WxaModifyDomain 配置小程序服务器域名
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/modifyServerDomain.html
-func (c *Client) WxaModifyDomain(ctx context.Context, notMustParams ...gorequest.Params) (*WxaModifyDomainResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaModifyDomain(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaModifyDomainResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/modify_domain?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/wxa/modify_domain?access_token="+authorizerAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newWxaModifyDomainResult(WxaModifyDomainResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaModifyDomainResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newWxaModifyDomainResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newWxaModifyDomainResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述

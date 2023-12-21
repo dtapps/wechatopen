@@ -5,8 +5,8 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 	"strings"
@@ -30,38 +30,27 @@ func newSnsComponentJsCode2sessionResult(result SnsComponentJsCode2sessionRespon
 
 // SnsComponentJsCode2session 小程序登录
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/others/WeChat_login.html
-func (c *Client) SnsComponentJsCode2session(ctx context.Context, jsCode string) (*SnsComponentJsCode2sessionResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) SnsComponentJsCode2session(ctx context.Context, componentAccessToken, authorizerAppid, jsCode string, notMustParams ...gorequest.Params) (*SnsComponentJsCode2sessionResult, error) {
 	// 参数
-	params := gorequest.NewParams()
-	params["appid"] = c.GetAuthorizerAppid()                          // 小程序的 appId
-	params["js_code"] = jsCode                                        // wx.login 获取的 code
-	params["grant_type"] = "authorization_code"                       // 填 authorization_code
-	params["component_appid"] = c.GetComponentAppId()                 // 第三方平台 appid
-	params["component_access_token"] = c.GetComponentAccessToken(ctx) // 第三方平台的component_access_token
+	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("appid", authorizerAppid)                       // 小程序的 appId
+	params.Set("js_code", jsCode)                              // wx.login 获取的 code
+	params.Set("grant_type", "authorization_code")             // 填 authorization_code
+	params.Set("component_appid", c.config.componentAppId)     // 第三方平台 appid
+	params.Set("component_access_token", componentAccessToken) // 第三方平台的component_access_token
 	// 请求
 	request, err := c.request(ctx, apiUrl+"/sns/component/jscode2session", params, http.MethodGet)
 	if err != nil {
-		return nil, err
+		return newSnsComponentJsCode2sessionResult(SnsComponentJsCode2sessionResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response SnsComponentJsCode2sessionResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newSnsComponentJsCode2sessionResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newSnsComponentJsCode2sessionResult(response, request.ResponseBody, request), err
 }
 
 type UserInfo struct {
+	SessionKey    string `json:"session_key"`
 	EncryptedData string `json:"encrypted_data"`
 	Iv            string `json:"iv"`
 }
@@ -115,7 +104,39 @@ func (r *SnsComponentJsCode2sessionResult) UserInfo(param UserInfo) *UserInfoRes
 	if err != nil {
 		return newUserInfoResult(response, err)
 	}
-	err = json.Unmarshal(cipherText, &response)
+	err = gojson.Unmarshal(cipherText, &response)
+	if err != nil {
+		return newUserInfoResult(response, err)
+	}
+	return newUserInfoResult(response, err)
+}
+
+// DecryptionUserInfo 解密用户信息
+func DecryptionUserInfo(param UserInfo) *UserInfoResult {
+	var response UserInfoResponse
+	aesKey, err := base64.StdEncoding.DecodeString(param.SessionKey)
+	if err != nil {
+		return newUserInfoResult(response, err)
+	}
+	cipherText, err := base64.StdEncoding.DecodeString(param.EncryptedData)
+	if err != nil {
+		return newUserInfoResult(response, err)
+	}
+	ivBytes, err := base64.StdEncoding.DecodeString(param.Iv)
+	if err != nil {
+		return newUserInfoResult(response, err)
+	}
+	block, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return newUserInfoResult(response, err)
+	}
+	mode := cipher.NewCBCDecrypter(block, ivBytes)
+	mode.CryptBlocks(cipherText, cipherText)
+	cipherText, err = pkcs7Unpaid(cipherText, block.BlockSize())
+	if err != nil {
+		return newUserInfoResult(response, err)
+	}
+	err = gojson.Unmarshal(cipherText, &response)
 	if err != nil {
 		return newUserInfoResult(response, err)
 	}
@@ -131,6 +152,26 @@ func UserInfoAvatarUrlReal(avatarUrl string) string {
 }
 
 func (r *SnsComponentJsCode2sessionResult) pkcs7Unpaid(data []byte, blockSize int) ([]byte, error) {
+	if blockSize <= 0 {
+		return nil, errors.New("invalid block size")
+	}
+	if len(data)%blockSize != 0 || len(data) == 0 {
+		return nil, errors.New("invalid PKCS7 data")
+	}
+	c := data[len(data)-1]
+	n := int(c)
+	if n == 0 || n > len(data) {
+		return nil, errors.New("invalid padding on input")
+	}
+	for i := 0; i < n; i++ {
+		if data[len(data)-n+i] != c {
+			return nil, errors.New("invalid padding on input")
+		}
+	}
+	return data[:len(data)-n], nil
+}
+
+func pkcs7Unpaid(data []byte, blockSize int) ([]byte, error) {
 	if blockSize <= 0 {
 		return nil, errors.New("invalid block size")
 	}

@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -35,28 +34,16 @@ func newWxaGetVersionInfoResult(result WxaGetVersionInfoResponse, body []byte, h
 
 // WxaGetVersionInfo 查询小程序版本信息
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_versioninfo.html
-func (c *Client) WxaGetVersionInfo(ctx context.Context) (*WxaGetVersionInfoResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaGetVersionInfo(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetVersionInfoResult, error) {
 	// 参数
-	params := gorequest.NewParams()
+	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/getversioninfo?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/wxa/getversioninfo?access_token="+authorizerAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newWxaGetVersionInfoResult(WxaGetVersionInfoResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaGetVersionInfoResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newWxaGetVersionInfoResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newWxaGetVersionInfoResult(response, request.ResponseBody, request), err
 }

@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -28,29 +27,17 @@ func newWxaMemberAuthResult(result WxaMemberAuthResponse, body []byte, http gore
 
 // WxaMemberAuth 获取体验者列表
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_AdminManagement/memberauth.html
-func (c *Client) WxaMemberAuth(ctx context.Context) (*WxaMemberAuthResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaMemberAuth(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaMemberAuthResult, error) {
 	// 参数
-	params := gorequest.NewParams()
-	params["action"] = "get_experiencer"
+	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("action", "get_experiencer")
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/memberauth?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/wxa/memberauth?access_token="+authorizerAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newWxaMemberAuthResult(WxaMemberAuthResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaMemberAuthResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newWxaMemberAuthResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newWxaMemberAuthResult(response, request.ResponseBody, request), err
 }

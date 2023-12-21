@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,27 +24,17 @@ func newCgiBinComponentApiCreatePreAuthCodenResult(result CgiBinComponentApiCrea
 
 // CgiBinComponentApiCreatePreAuthCoden 预授权码
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/pre_auth_code.html
-func (c *Client) CgiBinComponentApiCreatePreAuthCoden(ctx context.Context) (*CgiBinComponentApiCreatePreAuthCodenResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) CgiBinComponentApiCreatePreAuthCoden(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*CgiBinComponentApiCreatePreAuthCodenResult, error) {
 	// 参数
-	param := gorequest.NewParams()
-	param["component_appid"] = c.GetComponentAppId() // 第三方平台 appid
-	params := gorequest.NewParamsWith(param)
+	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("component_appid", c.config.componentAppId) // 第三方平台appid
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/component/api_create_preauthcode?component_access_token=%v", c.GetComponentAccessToken(ctx)), params, http.MethodPost)
-
+	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/api_create_preauthcode?component_access_token="+componentAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newCgiBinComponentApiCreatePreAuthCodenResult(CgiBinComponentApiCreatePreAuthCodenResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response CgiBinComponentApiCreatePreAuthCodenResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newCgiBinComponentApiCreatePreAuthCodenResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newCgiBinComponentApiCreatePreAuthCodenResult(response, request.ResponseBody, request), err
 }

@@ -2,7 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -26,27 +26,18 @@ func newCgiBinComponentApiStartPushTicketResult(result CgiBinComponentApiStartPu
 
 // CgiBinComponentApiStartPushTicket 启动ticket推送服务
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_verify_ticket_service.html
-func (c *Client) CgiBinComponentApiStartPushTicket(ctx context.Context) (*CgiBinComponentApiStartPushTicketResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) CgiBinComponentApiStartPushTicket(ctx context.Context, notMustParams ...gorequest.Params) (*CgiBinComponentApiStartPushTicketResult, error) {
 	// 参数
-	param := gorequest.NewParams()
-	param["component_appid"] = c.GetComponentAppId()      // 平台型第三方平台的appid
-	param["component_secret"] = c.GetComponentAppSecret() // 平台型第三方平台的APPSECRET
-	params := gorequest.NewParamsWith(param)
+	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("component_appid", c.config.componentAppId)      // 第三方平台appid
+	params.Set("component_secret", c.config.componentAppSecret) // 第三方平台app_secret
 	// 请求
 	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/api_start_push_ticket", params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newCgiBinComponentApiStartPushTicketResult(CgiBinComponentApiStartPushTicketResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response CgiBinComponentApiStartPushTicketResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newCgiBinComponentApiStartPushTicketResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newCgiBinComponentApiStartPushTicketResult(response, request.ResponseBody, request), err
 }

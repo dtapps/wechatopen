@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -26,27 +25,18 @@ func newCgiBinShortUrlResult(result CgiBinShortUrlResponse, body []byte, http go
 
 // CgiBinShortUrl 将二维码长链接转成短链接
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/qrcode/shorturl.html
-func (c *Client) CgiBinShortUrl(ctx context.Context, longUrl string) (*CgiBinShortUrlResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
-	err = c.checkAuthorizerIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) CgiBinShortUrl(ctx context.Context, authorizerAccessToken, longUrl string, notMustParams ...gorequest.Params) (*CgiBinShortUrlResult, error) {
 	// 参数
-	params := gorequest.NewParams()
-	params["action"] = "long2short" // 此处填long2short，代表长链接转短链接
-	params["long_url"] = longUrl    // 需要转换的长链接，支持http://、https://、weixin://wxpay 格式的url
+	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("action", "long2short") // 此处填long2short，代表长链接转短链接
+	params.Set("long_url", longUrl)    // 需要转换的长链接，支持http://、https://、weixin://wxpay 格式的url
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/cgi-bin/shorturl?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/cgi-bin/shorturl?access_token="+authorizerAccessToken, params, http.MethodPost)
+	if err != nil {
+		return newCgiBinShortUrlResult(CgiBinShortUrlResponse{}, request.ResponseBody, request), err
+	}
 	// 定义
 	var response CgiBinShortUrlResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newCgiBinShortUrlResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newCgiBinShortUrlResult(response, request.ResponseBody, request), err
 }

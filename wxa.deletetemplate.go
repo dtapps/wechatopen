@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,27 +24,19 @@ func newWxaDeleteTemplateResult(result WxaDeleteTemplateResponse, body []byte, h
 
 // WxaDeleteTemplate 删除指定代码模板
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/deletetemplate.html
-func (c *Client) WxaDeleteTemplate(ctx context.Context, templateId string) (*WxaDeleteTemplateResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaDeleteTemplate(ctx context.Context, componentAccessToken, templateId string, notMustParams ...gorequest.Params) (*WxaDeleteTemplateResult, error) {
 	// 参数
-	params := gorequest.NewParams()
+	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("template_id", templateId)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/deletetemplate?access_token=%s", c.GetComponentAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/wxa/deletetemplate?access_token="+componentAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newWxaDeleteTemplateResult(WxaDeleteTemplateResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaDeleteTemplateResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newWxaDeleteTemplateResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newWxaDeleteTemplateResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述

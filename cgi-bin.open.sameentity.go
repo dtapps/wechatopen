@@ -2,7 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,24 +25,16 @@ func newCgiBinOpenSameEnTityResult(result CgiBinOpenSameEnTityResponse, body []b
 
 // CgiBinOpenSameEnTity 获取授权绑定的商户号列表
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/cloudbase-common/wechatpay/getWechatPayList.html
-func (c *Client) CgiBinOpenSameEnTity(ctx context.Context) (*CgiBinOpenSameEnTityResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) CgiBinOpenSameEnTity(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*CgiBinOpenSameEnTityResult, error) {
 	// 参数
-	params := gorequest.NewParams()
+	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/cgi-bin/open/sameentity?access_token="+c.GetComponentAccessToken(ctx), params, http.MethodGet)
+	request, err := c.request(ctx, apiUrl+"/cgi-bin/open/sameentity?access_token="+componentAccessToken, params, http.MethodGet)
 	if err != nil {
-		return nil, err
+		return newCgiBinOpenSameEnTityResult(CgiBinOpenSameEnTityResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response CgiBinOpenSameEnTityResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newCgiBinOpenSameEnTityResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newCgiBinOpenSameEnTityResult(response, request.ResponseBody, request), err
 }

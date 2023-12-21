@@ -6,5 +6,4 @@ const (
 
 const (
 	LogTable = "wechatopen"
-	Version  = "1.0.44"
 )

@@ -2,7 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -32,27 +32,18 @@ func newTckWxPayListResult(result TckWxPayListResponse, body []byte, http gorequ
 
 // TckWxPayList 获取授权绑定的商户号列表
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/cloudbase-common/wechatpay/getWechatPayList.html
-func (c *Client) TckWxPayList(ctx context.Context) (*TckWxPayListResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) TckWxPayList(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*TckWxPayListResult, error) {
 	// 参数
-	// 参数
-	params := gorequest.NewParams()
+	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/tcb/wxpaylist?access_token="+c.GetComponentAccessToken(ctx), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/tcb/wxpaylist?access_token="+componentAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newTckWxPayListResult(TckWxPayListResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response TckWxPayListResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newTckWxPayListResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newTckWxPayListResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述

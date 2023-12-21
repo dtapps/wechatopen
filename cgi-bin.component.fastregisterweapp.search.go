@@ -2,8 +2,8 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,26 +25,18 @@ func newCgiBinComponentFastRegisterWeAppSearchResult(result CgiBinComponentFastR
 
 // CgiBinComponentFastRegisterWeAppSearch 快速注册企业小程序
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/register-management/fast-registration-ent/registerMiniprogram.html#%E4%BA%8C%E3%80%81%E6%9F%A5%E8%AF%A2%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81
-func (c *Client) CgiBinComponentFastRegisterWeAppSearch(ctx context.Context, notMustParams ...gorequest.Params) (*CgiBinComponentFastRegisterWeAppSearchResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) CgiBinComponentFastRegisterWeAppSearch(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*CgiBinComponentFastRegisterWeAppSearchResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/fastregisterweapp?action=search&component_access_token="+c.GetComponentAccessToken(ctx), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/fastregisterweapp?action=search&component_access_token="+componentAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newCgiBinComponentFastRegisterWeAppSearchResult(CgiBinComponentFastRegisterWeAppSearchResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response CgiBinComponentFastRegisterWeAppSearchResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newCgiBinComponentFastRegisterWeAppSearchResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newCgiBinComponentFastRegisterWeAppSearchResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述

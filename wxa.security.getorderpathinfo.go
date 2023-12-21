@@ -2,8 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -35,27 +34,19 @@ func newWxaSecurityGetOrderPathInfoResult(result WxaSecurityGetOrderPathInfoResp
 
 // WxaSecurityGetOrderPathInfo 获取订单页 path 信息
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/basic-info-management/getOrderPathInfo.html
-func (c *Client) WxaSecurityGetOrderPathInfo(ctx context.Context, infoType int) (*WxaSecurityGetOrderPathInfoResult, error) {
-	// 检查
-	err := c.checkComponentIsConfig()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) WxaSecurityGetOrderPathInfo(ctx context.Context, authorizerAccessToken string, infoType int, notMustParams ...gorequest.Params) (*WxaSecurityGetOrderPathInfoResult, error) {
 	// 参数
-	params := gorequest.NewParams()
+	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("info_type", infoType)
 	// 请求
-	request, err := c.request(ctx, fmt.Sprintf(apiUrl+"/wxa/security/getorderpathinfo?access_token=%s", c.GetAuthorizerAccessToken(ctx)), params, http.MethodPost)
+	request, err := c.request(ctx, apiUrl+"/wxa/security/getorderpathinfo?access_token="+authorizerAccessToken, params, http.MethodPost)
 	if err != nil {
-		return nil, err
+		return newWxaSecurityGetOrderPathInfoResult(WxaSecurityGetOrderPathInfoResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
 	var response WxaSecurityGetOrderPathInfoResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return newWxaSecurityGetOrderPathInfoResult(response, request.ResponseBody, request), nil
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newWxaSecurityGetOrderPathInfoResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述
