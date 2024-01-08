@@ -2,7 +2,7 @@
 <a href="https://www.dtapp.net/">Golang</a>
 </h1>
 
-📦 Golang WeChatOpen
+📦 Golang 微信开放平台
 
 [comment]: <> (go)
 [![godoc](https://pkg.go.dev/badge/go.dtapp.net/wechatopen?status.svg)](https://pkg.go.dev/go.dtapp.net/wechatopen)
@@ -13,5 +13,5 @@
 #### 安装
 
 ```go
-go get -v -u go.dtapp.net/wechatopen@v1.0.45
+go get -v -u go.dtapp.net/wechatopen@v1.0.46
 ```
