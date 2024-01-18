@@ -1,5 +1,5 @@
 package wechatopen
 
 const (
-	Version = "1.0.46"
+	Version = "1.0.47"
 )
