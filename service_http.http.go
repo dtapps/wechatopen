@@ -24,8 +24,8 @@ func (c *Client) ServeHttpHttp(ctx context.Context, w http.ResponseWriter, r *ht
 
 	// 解析请求体
 	var validateXml struct {
-		AppId   string `json:"AppId" xml:"AppId"`     // 第三方平台 appid
-		Encrypt string `json:"Encrypt" xml:"Encrypt"` // 加密内容
+		AppId   string `json:"AppId,omitempty" xml:"AppId,omitempty"`     // 第三方平台 appid
+		Encrypt string `json:"Encrypt,omitempty" xml:"Encrypt,omitempty"` // 加密内容
 	}
 	err := xml.NewDecoder(r.Body).Decode(&validateXml)
 	if err != nil {
