@@ -52,6 +52,7 @@ func (resp *WxaGetAuditStatusResult) ErrcodeInfo() string {
 		return "不存在第三方的已经提交的代码"
 	case 85012:
 		return "无效的审核 id"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

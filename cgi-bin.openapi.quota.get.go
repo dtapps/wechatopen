@@ -59,6 +59,7 @@ func (resp *cgiBinOpenapiQuotaGetResult) ErrcodeInfo() string {
 		return "cgi_path填错了"
 	case 76022:
 		return "当前调用接口使用的token与api所属账号不符，详情可看注意事项的说明"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

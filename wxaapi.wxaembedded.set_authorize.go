@@ -44,6 +44,7 @@ func (resp *WxaApiWxAembeddedSetAuthorizeResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 89417:
 		return "修改半屏小程序方式 flag 参数错误"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

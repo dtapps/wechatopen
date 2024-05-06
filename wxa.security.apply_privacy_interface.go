@@ -56,6 +56,7 @@ func (resp *WxaSecurityApplyPrivacyInterfaceResult) ErrcodeInfo() string {
 		return "该帐号不可申请，请检查类目是否符合"
 	case 61037:
 		return "需要以ntf-8的编码格式提交"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

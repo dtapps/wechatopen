@@ -64,8 +64,9 @@ func (resp *CgiBinComponentFastRegisterWeAppCreateResult) ErrcodeInfo() string {
 		return "第三方权限集不全，请补充权限集后重试"
 	case 89255:
 		return "code参数无效，请检查 code 长度以及内容是否正确；注意code_type的值不同需要传的 code 长度不一样"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }
 
 // StatusInfo 状态描述

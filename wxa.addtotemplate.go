@@ -47,6 +47,7 @@ func (resp *WxaAddToTemplateResult) ErrcodeInfo() string {
 		return "找不到草稿"
 	case 85065:
 		return "模板库已满"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

@@ -52,6 +52,7 @@ func (resp *CgiBinWxOpenQrCodeJumpPublishResult) ErrcodeInfo() string {
 		return "数据异常，请删除后重新添加"
 	case 886000:
 		return "本月发布次数达到上线（100次）"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

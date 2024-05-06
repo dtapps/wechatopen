@@ -45,6 +45,7 @@ func (resp *WxaReleaseResult) ErrcodeInfo() string {
 		return "没有审核版本"
 	case 85020:
 		return "审核状态未满足发布"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

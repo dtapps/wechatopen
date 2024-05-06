@@ -53,6 +53,7 @@ func (resp *WxaApiWxaembeddedDelEmbeddedResult) ErrcodeInfo() string {
 		return "不支持此类型小程序"
 	case 89432:
 		return "不是小程序"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

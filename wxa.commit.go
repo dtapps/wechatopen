@@ -67,6 +67,7 @@ func (resp *WxaCommitResult) ErrcodeInfo() string {
 		return "请勿频繁提交，待上一次操作完成后再提交"
 	case 9402203:
 		return `标准模板ext_json错误，传了不合法的参数， 如果是标准模板库的模板，则ext_json支持的参数仅为{"extAppid":'', "ext": {}, "window": {}}`
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

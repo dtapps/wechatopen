@@ -52,6 +52,7 @@ func (resp *WxaGetWxaCodeUnLimitResult) ErrcodeInfo() string {
 		return "page 不合法（页面不存在或者小程序没有发布、根路径前加 /或者携带参数）"
 	case 40097:
 		return "env_version 不合法"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

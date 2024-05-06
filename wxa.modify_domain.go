@@ -68,6 +68,7 @@ func (resp *WxaModifyDomainResult) ErrcodeInfo() string {
 		return "存在 “ 缺少ICP备案的域名”导致无修改"
 	case 85303:
 		return "同时存在“不符合域名规则的域名”以及“ 缺少ICP备案的域名”导致无修改"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

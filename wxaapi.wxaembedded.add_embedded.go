@@ -81,6 +81,7 @@ func (resp *WxaApiWxaembeddedAddEmbeddedResult) ErrcodeInfo() string {
 		return "授权次数到达上限"
 	case 89419:
 		return "获取半屏小程序每日授权次数失败"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

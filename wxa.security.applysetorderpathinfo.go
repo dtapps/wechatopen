@@ -47,6 +47,7 @@ func (resp *WxaSecurityApplySetOrderPathInfoResult) ErrcodeInfo() string {
 		return "参数填写错误"
 	case 61044:
 		return "path填写不规范"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

@@ -54,6 +54,7 @@ func (resp *WxaSecurityGetPrivacyInterfaceResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 61031:
 		return "审核中，请不要重复申请"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

@@ -51,6 +51,7 @@ func (resp *WxaBindTesterResult) ErrcodeInfo() string {
 		return "微信号绑定的小程序体验者达到上限"
 	case 85004:
 		return "微信号已经绑定"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

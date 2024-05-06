@@ -56,6 +56,7 @@ func (resp *WxaGetTemplateListResult) ErrcodeInfo() string {
 		return "请使用GET，不要使用post"
 	case 85064:
 		return "找不到模板"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

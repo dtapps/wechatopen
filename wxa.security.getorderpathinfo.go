@@ -54,6 +54,7 @@ func (resp *WxaSecurityGetOrderPathInfoResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 61041:
 		return "订单页 path 未设置"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

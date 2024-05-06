@@ -59,6 +59,7 @@ func (resp *CgiBinWxOpenQrCodeJumpAddResult) ErrcodeInfo() string {
 		return "二维码规则已满"
 	case 85075:
 		return "个人类型小程序无法设置二维码规则"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

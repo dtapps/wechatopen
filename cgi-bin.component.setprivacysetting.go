@@ -53,6 +53,7 @@ func (resp *CgiBinComponentSetPrivacySettingResult) ErrcodeInfo() string {
 		return "现网隐私协议不存在"
 	case 86075:
 		return "现网隐私协议的ext_file_media_id禁止修改"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

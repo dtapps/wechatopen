@@ -54,6 +54,7 @@ func (resp *WxaApiWxaembeddedGetListResult) ErrcodeInfo() string {
 		return "半屏小程序系统错误"
 	case 89409:
 		return "获取半屏小程序列表参数错误"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

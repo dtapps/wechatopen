@@ -54,6 +54,7 @@ func (resp *WxaSetDefaultamsInfoAgencySetCustomShareRatioResult) ErrcodeInfo() s
 		return "操作过快"
 	case 2056:
 		return "服务商未在变现专区开通账户"
+	default:
+		return resp.Result.ErrMsg
 	}
-	return "系统繁忙"
 }

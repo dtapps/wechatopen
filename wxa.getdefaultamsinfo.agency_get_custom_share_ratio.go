@@ -57,6 +57,7 @@ func (resp *WxaGetDefaultamsInfoAgencyGetCustomShareRatioResult) ErrcodeInfo() s
 		return "服务商未在变现专区开通账户"
 	case 2061:
 		return "不存在为该appid设置的个性化分成比例"
+	default:
+		return resp.Result.ErrMsg
 	}
-	return "系统繁忙"
 }

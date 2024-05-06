@@ -53,6 +53,7 @@ func (resp *WxaSetWebViewDoMainResult) ErrcodeInfo() string {
 		return "业务域名数量超过限制，最多可以添加100个业务域名"
 	case 89231:
 		return "个人小程序不支持调用 setwebviewdomain 接口"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

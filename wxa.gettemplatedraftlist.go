@@ -53,6 +53,7 @@ func (resp *WxaGetTemplateDraftListResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 85064:
 		return "找不到模板"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

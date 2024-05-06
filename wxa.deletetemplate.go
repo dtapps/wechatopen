@@ -44,6 +44,7 @@ func (resp *WxaDeleteTemplateResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 85064:
 		return "找不到模板，请检查模板id是否输入正确"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }

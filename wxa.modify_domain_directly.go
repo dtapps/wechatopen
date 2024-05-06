@@ -66,6 +66,7 @@ func (resp *WxaModifyDomainDirectlyResult) ErrcodeInfo() string {
 		return "域名数量超限制"
 	case 86102:
 		return "每个月只能修改50次，超过域名修改次数限制"
+	default:
+		return resp.Result.Errmsg
 	}
-	return "系统繁忙"
 }
