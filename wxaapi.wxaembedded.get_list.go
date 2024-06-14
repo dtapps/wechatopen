@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -34,16 +33,17 @@ func newWxaApiWxaembeddedGetListResult(result WxaApiWxaembeddedGetListResponse, 
 // WxaApiWxaembeddedGetList 获取半屏小程序调用列表
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/embedded-management/getEmbeddedList.html
 func (c *Client) WxaApiWxaembeddedGetList(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaApiWxaembeddedGetListResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxaapi/wxaembedded/get_list")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxaapi/wxaembedded/get_list?access_token="+authorizerAccessToken, params, http.MethodGet)
-	if err != nil {
-		return newWxaApiWxaembeddedGetListResult(WxaApiWxaembeddedGetListResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaApiWxaembeddedGetListResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxaapi/wxaembedded/get_list?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
 	return newWxaApiWxaembeddedGetListResult(response, request.ResponseBody, request), err
 }
 

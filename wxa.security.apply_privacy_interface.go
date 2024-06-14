@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -26,16 +25,17 @@ func newWxaSecurityApplyPrivacyInterfaceResult(result WxaSecurityApplyPrivacyInt
 // WxaSecurityApplyPrivacyInterface 申请接口
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/apply_api/apply_privacy_interface.html
 func (c *Client) WxaSecurityApplyPrivacyInterface(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaSecurityApplyPrivacyInterfaceResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/security/apply_privacy_interface")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/security/apply_privacy_interface?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaSecurityApplyPrivacyInterfaceResult(WxaSecurityApplyPrivacyInterfaceResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaSecurityApplyPrivacyInterfaceResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/security/apply_privacy_interface?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSecurityApplyPrivacyInterfaceResult(response, request.ResponseBody, request), err
 }
 

@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,16 +24,17 @@ func newWxaApiWxaembeddedDelEmbeddedResult(result WxaApiWxaembeddedDelEmbeddedRe
 // WxaApiWxaembeddedDelEmbedded 删除半屏小程序
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/embedded-management/deleteEmbedded.html
 func (c *Client) WxaApiWxaembeddedDelEmbedded(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaApiWxaembeddedDelEmbeddedResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxaapi/wxaembedded/del_embedded")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxaapi/wxaembedded/del_embedded?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaApiWxaembeddedDelEmbeddedResult(WxaApiWxaembeddedDelEmbeddedResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaApiWxaembeddedDelEmbeddedResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxaapi/wxaembedded/del_embedded?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaApiWxaembeddedDelEmbeddedResult(response, request.ResponseBody, request), err
 }
 

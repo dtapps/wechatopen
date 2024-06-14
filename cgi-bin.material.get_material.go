@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,17 +24,17 @@ func newCgiBinMaterialGetMaterialResult(result CgiBinMaterialGetMaterialResponse
 // CgiBinMaterialGetMaterial 获取永久素材
 // https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Getting_Permanent_Assets.html
 func (c *Client) CgiBinMaterialGetMaterial(ctx context.Context, authorizerAccessToken, mediaId string, notMustParams ...gorequest.Params) (*CgiBinMaterialGetMaterialResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "cgi-bin/material/get_material")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("media_id", mediaId) // 要获取的素材的media_id
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/cgi-bin/material/get_material?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newCgiBinMaterialGetMaterialResult(CgiBinMaterialGetMaterialResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response CgiBinMaterialGetMaterialResponse
-	// 判断内容是否为图片
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "cgi-bin/material/get_material?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinMaterialGetMaterialResult(response, request.ResponseBody, request), err
 }

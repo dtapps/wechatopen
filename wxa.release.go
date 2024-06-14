@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,16 +24,17 @@ func newWxaReleaseResult(result WxaReleaseResponse, body []byte, http gorequest.
 // WxaRelease 发布已通过审核的小程序
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/release.html
 func (c *Client) WxaRelease(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaReleaseResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/release")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/release?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaReleaseResult(WxaReleaseResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaReleaseResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/release?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaReleaseResult(response, request.ResponseBody, request), err
 }
 

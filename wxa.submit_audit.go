@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -26,15 +25,16 @@ func newWxaSubmitAuditResult(result WxaSubmitAuditResponse, body []byte, http go
 // WxaSubmitAudit 提交审核
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/submit_audit.html
 func (c *Client) WxaSubmitAudit(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaSubmitAuditResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/submit_audit")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/submit_audit?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaSubmitAuditResult(WxaSubmitAuditResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaSubmitAuditResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/submit_audit?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSubmitAuditResult(response, request.ResponseBody, request), err
 }

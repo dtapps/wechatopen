@@ -27,7 +27,7 @@ type cipherRequestHttpBody struct {
 }
 
 // ServeHttpVerifyTicket 验证票据推送
-func (c *Client) ServeHttpVerifyTicket(ctx context.Context, r *http.Request) (resp *ResponseServeHttpVerifyTicket, err error) {
+func (c *Client) ServeHttpVerifyTicket(ctx context.Context, w http.ResponseWriter, r *http.Request) (resp *ResponseServeHttpVerifyTicket, err error) {
 	var (
 		query = r.URL.Query()
 
@@ -58,7 +58,7 @@ func (c *Client) ServeHttpVerifyTicket(ctx context.Context, r *http.Request) (re
 		return resp, errors.New("未找到随机数参数")
 	}
 
-	wantSignature = Sign(c.config.messageToken, timestamp, nonce)
+	wantSignature = Sign(c.GetMessageToken(), timestamp, nonce)
 	if haveSignature != wantSignature {
 		return resp, errors.New("签名错误")
 	}
@@ -97,7 +97,7 @@ func (c *Client) ServeHttpVerifyTicket(ctx context.Context, r *http.Request) (re
 		return resp, errors.New(fmt.Sprintf("Encrypt 解码字符串错误：%v", err))
 	}
 
-	AesKey, err := base64.StdEncoding.DecodeString(c.config.messageKey + "=")
+	AesKey, err := base64.StdEncoding.DecodeString(c.GetMessageKey() + "=")
 	if err != nil {
 		return resp, errors.New(fmt.Sprintf("messageKey 解码字符串错误：%v", err))
 	}

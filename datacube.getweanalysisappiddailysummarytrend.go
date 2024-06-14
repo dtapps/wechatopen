@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -29,17 +28,18 @@ func newDataCubeGetWeAnAlySisAppidDailySummaryTrendResult(result DataCubeGetWeAn
 // DataCubeGetWeAnAlySisAppidDailySummaryTrend 获取用户访问小程序数据概况
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/data-analysis/others/getDailySummary.html
 func (c *Client) DataCubeGetWeAnAlySisAppidDailySummaryTrend(ctx context.Context, authorizerAccessToken, beginDate, endDate string, notMustParams ...gorequest.Params) (*DataCubeGetWeAnAlySisAppidDailySummaryTrendResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "datacube/getweanalysisappiddailysummarytrend")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("begin_date", beginDate)
 	params.Set("end_date", endDate)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/datacube/getweanalysisappiddailysummarytrend?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newDataCubeGetWeAnAlySisAppidDailySummaryTrendResult(DataCubeGetWeAnAlySisAppidDailySummaryTrendResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response DataCubeGetWeAnAlySisAppidDailySummaryTrendResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "datacube/getweanalysisappiddailysummarytrend?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newDataCubeGetWeAnAlySisAppidDailySummaryTrendResult(response, request.ResponseBody, request), err
 }

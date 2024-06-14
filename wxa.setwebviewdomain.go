@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -25,16 +24,17 @@ func newWxaSetWebViewDoMainResult(result WxaSetWebViewDoMainResponse, body []byt
 // WxaSetWebViewDoMain 配置小程序业务域名
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/modifyJumpDomain.html
 func (c *Client) WxaSetWebViewDoMain(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaSetWebViewDoMainResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/setwebviewdomain")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/setwebviewdomain?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaSetWebViewDoMainResult(WxaSetWebViewDoMainResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaSetWebViewDoMainResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/setwebviewdomain?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSetWebViewDoMainResult(response, request.ResponseBody, request), err
 }
 

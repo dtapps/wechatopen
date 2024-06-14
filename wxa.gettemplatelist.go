@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -36,16 +35,17 @@ func newWxaGetTemplateListResult(result WxaGetTemplateListResponse, body []byte,
 // WxaGetTemplateList 获取代码模板列表
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/gettemplatelist.html
 func (c *Client) WxaGetTemplateList(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*WxaGetTemplateListResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/gettemplatelist")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/gettemplatelist?access_token="+componentAccessToken, params, http.MethodGet)
-	if err != nil {
-		return newWxaGetTemplateListResult(WxaGetTemplateListResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaGetTemplateListResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/gettemplatelist?access_token="+componentAccessToken, params, http.MethodGet, &response)
 	return newWxaGetTemplateListResult(response, request.ResponseBody, request), err
 }
 

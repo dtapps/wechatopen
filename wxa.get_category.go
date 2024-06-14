@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -33,15 +32,16 @@ func newWxaGetCategoryResult(result WxaGetCategoryResponse, body []byte, http go
 // WxaGetCategory 获取审核时可填写的类目信息
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/get_category.html
 func (c *Client) WxaGetCategory(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetCategoryResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/get_category")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/get_category?access_token="+authorizerAccessToken, params, http.MethodGet)
-	if err != nil {
-		return newWxaGetCategoryResult(WxaGetCategoryResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaGetCategoryResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/get_category?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
 	return newWxaGetCategoryResult(response, request.ResponseBody, request), err
 }

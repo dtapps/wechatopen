@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -27,16 +26,17 @@ func newWxaOperationamsAgencyCheckCanOpenPublisherResult(result WxaOperationamsA
 // 检测是否能开通流量主
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/ams/open/AgencyCheckCanOpenPublisher.html
 func (c *Client) WxaOperationamsAgencyCheckCanOpenPublisher(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaOperationamsAgencyCheckCanOpenPublisherResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/operationams")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/operationams?action=agency_check_can_open_publisher&access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaOperationamsAgencyCheckCanOpenPublisherResult(WxaOperationamsAgencyCheckCanOpenPublisherResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaOperationamsAgencyCheckCanOpenPublisherResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/operationams?action=agency_check_can_open_publisher&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaOperationamsAgencyCheckCanOpenPublisherResult(response, request.ResponseBody, request), err
 }
 

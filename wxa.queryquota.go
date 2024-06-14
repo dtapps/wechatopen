@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -29,16 +28,17 @@ func newWxaQueryquotaResult(result WxaQueryquotaResponse, body []byte, http gore
 // WxaQueryquota 查询服务商审核额度
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/code-management/setCodeAuditQuota.html
 func (c *Client) WxaQueryquota(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaQueryquotaResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/queryquota")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/queryquota?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaQueryquotaResult(WxaQueryquotaResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaQueryquotaResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/queryquota?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaQueryquotaResult(response, request.ResponseBody, request), err
 }
 

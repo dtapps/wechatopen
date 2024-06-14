@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -26,18 +25,19 @@ func newWxaSetDefaultamsInfoAgencySetCustomShareRatioResult(result WxaSetDefault
 // 设置自定义分账比例
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/ams/percentage/SetCustomShareRatio.html
 func (c *Client) WxaSetDefaultamsInfoAgencySetCustomShareRatio(ctx context.Context, authorizerAccessToken string, appid string, shareRatio int64, notMustParams ...gorequest.Params) (*WxaSetDefaultamsInfoAgencySetCustomShareRatioResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/setdefaultamsinfo")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("appid", appid)
 	params.Set("share_ratio", shareRatio)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/setdefaultamsinfo?action=agency_set_custom_share_ratio&access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaSetDefaultamsInfoAgencySetCustomShareRatioResult(WxaSetDefaultamsInfoAgencySetCustomShareRatioResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaSetDefaultamsInfoAgencySetCustomShareRatioResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/setdefaultamsinfo?action=agency_set_custom_share_ratio&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSetDefaultamsInfoAgencySetCustomShareRatioResult(response, request.ResponseBody, request), err
 }
 

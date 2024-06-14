@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -26,17 +25,18 @@ func newWxaBindTesterResult(result WxaBindTesterResponse, body []byte, http gore
 // WxaBindTester 绑定微信用户为体验者
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_AdminManagement/Admin.html
 func (c *Client) WxaBindTester(ctx context.Context, authorizerAccessToken, wechatid string, notMustParams ...gorequest.Params) (*WxaBindTesterResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/bind_tester")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("wechatid", wechatid)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/bind_tester?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaBindTesterResult(WxaBindTesterResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaBindTesterResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/bind_tester?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaBindTesterResult(response, request.ResponseBody, request), err
 }
 

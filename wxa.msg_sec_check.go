@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -39,15 +38,16 @@ func newWxaMsgSecCheckResult(result WxaMsgSecCheckResponse, body []byte, http go
 // WxaMsgSecCheck 文本内容安全识别
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
 func (c *Client) WxaMsgSecCheck(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaMsgSecCheckResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/msg_sec_check")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/msg_sec_check?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaMsgSecCheckResult(WxaMsgSecCheckResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaMsgSecCheckResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/msg_sec_check?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaMsgSecCheckResult(response, request.ResponseBody, request), err
 }

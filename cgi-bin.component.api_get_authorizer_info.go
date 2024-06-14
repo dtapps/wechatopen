@@ -2,7 +2,7 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
+	"fmt"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -83,17 +83,18 @@ func newCgiBinComponentApiGetAuthorizerInfoResult(result CgiBinComponentApiGetAu
 // CgiBinComponentApiGetAuthorizerInfo 获取授权帐号详情
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/api_get_authorizer_info.html
 func (c *Client) CgiBinComponentApiGetAuthorizerInfo(ctx context.Context, authorizerAppid, componentAccessToken string, notMustParams ...gorequest.Params) (*CgiBinComponentApiGetAuthorizerInfoResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/api_get_authorizer_info")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("component_appid", c.config.componentAppId) // 第三方平台appid
-	params.Set("authorizer_appid", authorizerAppid)        // 授权方appid
+	params.Set("component_appid", c.GetComponentAppId()) // 第三方平台appid
+	params.Set("authorizer_appid", authorizerAppid)      // 授权方appid
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/cgi-bin/component/api_get_authorizer_info?component_access_token="+componentAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newCgiBinComponentApiGetAuthorizerInfoResult(CgiBinComponentApiGetAuthorizerInfoResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response CgiBinComponentApiGetAuthorizerInfoResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, fmt.Sprintf("cgi-bin/component/api_get_authorizer_info?component_access_token=%s", componentAccessToken), params, http.MethodPost, &response)
 	return newCgiBinComponentApiGetAuthorizerInfoResult(response, request.ResponseBody, request), err
 }

@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -27,19 +26,22 @@ func newWxaGetWxaCodeUnLimitResult(result WxaGetWxaCodeUnLimitResponse, body []b
 // WxaGetWxaCodeUnLimit 获取小程序码，适用于需要的码数量极多的业务场景。通过该接口生成的小程序码，永久有效，数量暂无限制
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
 func (c *Client) WxaGetWxaCodeUnLimit(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetWxaCodeUnLimitResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/getwxacodeunlimit")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/getwxacodeunlimit?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaGetWxaCodeUnLimitResult(WxaGetWxaCodeUnLimitResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaGetWxaCodeUnLimitResponse
+	request, err := c.request(ctx, "wxa/getwxacodeunlimit?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+
 	// 判断内容是否为图片
-	if request.HeaderIsImg() == false {
-		err = gojson.Unmarshal(request.ResponseBody, &response)
-	}
+	//if request.HeaderIsImg() == false {
+	//	err = gojson.Unmarshal(request.ResponseBody, &response)
+	//}
 	return newWxaGetWxaCodeUnLimitResult(response, request.ResponseBody, request), err
 }
 

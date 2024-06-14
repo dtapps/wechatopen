@@ -7,7 +7,7 @@ import (
 )
 
 // ServeHttpAuthorizerAppid 授权跳转
-func (c *Client) ServeHttpAuthorizerAppid(ctx context.Context, r *http.Request, componentAccessToken string) (resp CgiBinComponentApiQueryAuthResponse, agentUserId string, err error) {
+func (c *Client) ServeHttpAuthorizerAppid(ctx context.Context, w http.ResponseWriter, r *http.Request, componentAccessToken string) (resp CgiBinComponentApiQueryAuthResponse, agentUserId string, err error) {
 	var (
 		query = r.URL.Query()
 

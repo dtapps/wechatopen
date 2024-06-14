@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -49,15 +48,16 @@ func newWxaGetEffectiveDomainResult(result WxaGetEffectiveDomainResponse, body [
 // WxaGetEffectiveDomain 获取发布后生效服务器域名列表
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/get_effective_domain.html
 func (c *Client) WxaGetEffectiveDomain(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetEffectiveDomainResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "wxa/get_effective_domain")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/wxa/get_effective_domain?access_token="+authorizerAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newWxaGetEffectiveDomainResult(WxaGetEffectiveDomainResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response WxaGetEffectiveDomainResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "wxa/get_effective_domain?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaGetEffectiveDomainResult(response, request.ResponseBody, request), err
 }

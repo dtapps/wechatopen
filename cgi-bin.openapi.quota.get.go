@@ -2,7 +2,6 @@ package wechatopen
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 	"net/http"
 )
@@ -38,17 +37,18 @@ func newcgiBinOpenapiQuotaGetResult(result cgiBinOpenapiQuotaGetResponse, body [
 // CgiBinOpenapiQuotaGet 查询API调用额度
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/openapi/getApiQuota.html
 func (c *Client) CgiBinOpenapiQuotaGet(ctx context.Context, componentAccessToken string, cgiPath string, notMustParams ...gorequest.Params) (*cgiBinOpenapiQuotaGetResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "cgi-bin/openapi/quota/get")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("cgi_path", cgiPath)
+
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/cgi-bin/openapi/quota/get?access_token="+componentAccessToken, params, http.MethodPost)
-	if err != nil {
-		return newcgiBinOpenapiQuotaGetResult(cgiBinOpenapiQuotaGetResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response cgiBinOpenapiQuotaGetResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, "cgi-bin/openapi/quota/get?access_token="+componentAccessToken, params, http.MethodPost, &response)
 	return newcgiBinOpenapiQuotaGetResult(response, request.ResponseBody, request), err
 }
 
