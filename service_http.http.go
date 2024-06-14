@@ -3,6 +3,7 @@ package wechatopen
 import (
 	"context"
 	"encoding/xml"
+	"go.opentelemetry.io/otel/codes"
 	"net/http"
 )
 
@@ -20,6 +21,10 @@ type ResponseServeHttpHttp struct {
 // ServeHttpHttp 验证票据推送
 func (c *Client) ServeHttpHttp(ctx context.Context, w http.ResponseWriter, r *http.Request) (ResponseServeHttpHttp, error) {
 
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "ServeHttpHttp")
+	defer c.TraceEndSpan()
+
 	query := r.URL.Query()
 
 	// 解析请求体
@@ -29,6 +34,8 @@ func (c *Client) ServeHttpHttp(ctx context.Context, w http.ResponseWriter, r *ht
 	}
 	err := xml.NewDecoder(r.Body).Decode(&validateXml)
 	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
 		return ResponseServeHttpHttp{}, err
 	}
 

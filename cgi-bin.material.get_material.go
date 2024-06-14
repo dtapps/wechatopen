@@ -36,5 +36,10 @@ func (c *Client) CgiBinMaterialGetMaterial(ctx context.Context, authorizerAccess
 	// 请求
 	var response CgiBinMaterialGetMaterialResponse
 	request, err := c.request(ctx, "cgi-bin/material/get_material?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+
+	// 判断内容是否为图片
+	//if request.HeaderIsImg() == false {
+	//	err = gojson.Unmarshal(request.ResponseBody, &response)
+	//}
 	return newCgiBinMaterialGetMaterialResult(response, request.ResponseBody, request), err
 }
