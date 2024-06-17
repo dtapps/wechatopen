@@ -46,6 +46,7 @@ func (c *Client) request(ctx context.Context, span trace.Span, url string, param
 		span.SetStatus(codes.Error, err.Error())
 	}
 
+	// OpenTelemetry链路追踪
 	span.SetAttributes(attribute.String("http.response.body", gojson.JsonEncodeNoError(response)))
 
 	return request, err
