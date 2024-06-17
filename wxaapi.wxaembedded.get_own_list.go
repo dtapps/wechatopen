@@ -35,15 +35,15 @@ func newWxaApiWxAembeddedGetOwnListResult(result WxaApiWxAembeddedGetOwnListResp
 func (c *Client) WxaApiWxAembeddedGetOwnList(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaApiWxAembeddedGetOwnListResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxaapi/wxaembedded/get_own_list")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxaapi/wxaembedded/get_own_list")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaApiWxAembeddedGetOwnListResponse
-	request, err := c.request(ctx, "wxaapi/wxaembedded/get_own_list?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "wxaapi/wxaembedded/get_own_list?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
 	return newWxaApiWxAembeddedGetOwnListResult(response, request.ResponseBody, request), err
 }
 

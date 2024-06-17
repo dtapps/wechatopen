@@ -25,14 +25,14 @@ func NewGetCallBackIpResult(result GetCallBackIpResponse, body []byte, http gore
 func (c *Client) CgiBinGetApiDomainIp(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*GetCallBackIpResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/get_api_domain_ip")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/get_api_domain_ip")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response GetCallBackIpResponse
-	request, err := c.request(ctx, "cgi-bin/get_api_domain_ip?access_token="+componentAccessToken, params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "cgi-bin/get_api_domain_ip?access_token="+componentAccessToken, params, http.MethodGet, &response)
 	return NewGetCallBackIpResult(response, request.ResponseBody, request), err
 }

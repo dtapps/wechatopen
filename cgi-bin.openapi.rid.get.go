@@ -34,8 +34,8 @@ func newCgiBinOpenapiRidGetResult(result CgiBinOpenapiRidGetResponse, body []byt
 func (c *Client) CgiBinOpenapiRidGet(ctx context.Context, authorizerAccessToken, rid string, notMustParams ...gorequest.Params) (*CgiBinOpenapiRidGetResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/openapi/rid/get")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/openapi/rid/get")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -45,6 +45,6 @@ func (c *Client) CgiBinOpenapiRidGet(ctx context.Context, authorizerAccessToken,
 
 	// 请求
 	var response CgiBinOpenapiRidGetResponse
-	request, err := c.request(ctx, "cgi-bin/openapi/rid/get?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/openapi/rid/get?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinOpenapiRidGetResult(response, request.ResponseBody, request), err
 }

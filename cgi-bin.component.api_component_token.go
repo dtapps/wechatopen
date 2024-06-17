@@ -26,8 +26,8 @@ func newCgiBinComponentApiComponentTokenResult(result CgiBinComponentApiComponen
 func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context, componentVerifyTicket string, notMustParams ...gorequest.Params) (*CgiBinComponentApiComponentTokenResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/api_component_token")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/component/api_component_token")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -37,6 +37,6 @@ func (c *Client) CgiBinComponentApiComponentToken(ctx context.Context, component
 
 	// 请求
 	var response CgiBinComponentApiComponentTokenResponse
-	request, err := c.request(ctx, "cgi-bin/component/api_component_token", params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/component/api_component_token", params, http.MethodPost, &response)
 	return newCgiBinComponentApiComponentTokenResult(response, request.ResponseBody, request), err
 }

@@ -27,8 +27,8 @@ func newCgiBinComponentApiCreatePreAuthCodenResult(result CgiBinComponentApiCrea
 func (c *Client) CgiBinComponentApiCreatePreAuthCoden(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*CgiBinComponentApiCreatePreAuthCodenResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/api_create_preauthcode")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/component/api_create_preauthcode")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -36,6 +36,6 @@ func (c *Client) CgiBinComponentApiCreatePreAuthCoden(ctx context.Context, compo
 
 	// 请求
 	var response CgiBinComponentApiCreatePreAuthCodenResponse
-	request, err := c.request(ctx, fmt.Sprintf("cgi-bin/component/api_create_preauthcode?component_access_token=%s", componentAccessToken), params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, fmt.Sprintf("cgi-bin/component/api_create_preauthcode?component_access_token=%s", componentAccessToken), params, http.MethodPost, &response)
 	return newCgiBinComponentApiCreatePreAuthCodenResult(response, request.ResponseBody, request), err
 }

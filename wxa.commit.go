@@ -26,15 +26,15 @@ func newWxaCommitResult(result WxaCommitResponse, body []byte, http gorequest.Re
 func (c *Client) WxaCommit(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaCommitResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/commit")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/commit")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaCommitResponse
-	request, err := c.request(ctx, "wxa/commit?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/commit?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaCommitResult(response, request.ResponseBody, request), err
 }
 

@@ -26,8 +26,8 @@ func newWxaUnbindTesterResult(result WxaUnbindTesterResponse, body []byte, http 
 func (c *Client) WxaUnbindTester(ctx context.Context, authorizerAccessToken, wechatid, userstr string, notMustParams ...gorequest.Params) (*WxaUnbindTesterResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/unbind_tester")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/unbind_tester")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -38,6 +38,6 @@ func (c *Client) WxaUnbindTester(ctx context.Context, authorizerAccessToken, wec
 
 	// 请求
 	var response WxaUnbindTesterResponse
-	request, err := c.request(ctx, "wxa/unbind_tester?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/unbind_tester?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaUnbindTesterResult(response, request.ResponseBody, request), err
 }

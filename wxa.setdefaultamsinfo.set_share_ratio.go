@@ -27,8 +27,8 @@ func newWxaSetDefaultamsInfoSetShareRatioResult(result WxaSetDefaultamsInfoSetSh
 func (c *Client) WxaSetDefaultamsInfoSetShareRatio(ctx context.Context, authorizerAccessToken string, shareRatio int64, notMustParams ...gorequest.Params) (*WxaSetDefaultamsInfoSetShareRatioResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/setdefaultamsinfo")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/setdefaultamsinfo")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -36,7 +36,7 @@ func (c *Client) WxaSetDefaultamsInfoSetShareRatio(ctx context.Context, authoriz
 
 	// 请求
 	var response WxaSetDefaultamsInfoSetShareRatioResponse
-	request, err := c.request(ctx, "wxa/setdefaultamsinfo?action=set_share_ratio&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/setdefaultamsinfo?action=set_share_ratio&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSetDefaultamsInfoSetShareRatioResult(response, request.ResponseBody, request), err
 }
 

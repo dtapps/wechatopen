@@ -27,8 +27,8 @@ func newCgiBinShortUrlResult(result CgiBinShortUrlResponse, body []byte, http go
 func (c *Client) CgiBinShortUrl(ctx context.Context, authorizerAccessToken, longUrl string, notMustParams ...gorequest.Params) (*CgiBinShortUrlResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/shorturl")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/shorturl")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -37,6 +37,6 @@ func (c *Client) CgiBinShortUrl(ctx context.Context, authorizerAccessToken, long
 
 	// 请求
 	var response CgiBinShortUrlResponse
-	request, err := c.request(ctx, "cgi-bin/shorturl?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/shorturl?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinShortUrlResult(response, request.ResponseBody, request), err
 }

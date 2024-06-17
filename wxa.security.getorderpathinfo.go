@@ -36,8 +36,8 @@ func newWxaSecurityGetOrderPathInfoResult(result WxaSecurityGetOrderPathInfoResp
 func (c *Client) WxaSecurityGetOrderPathInfo(ctx context.Context, authorizerAccessToken string, infoType int, notMustParams ...gorequest.Params) (*WxaSecurityGetOrderPathInfoResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/security/getorderpathinfo")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/security/getorderpathinfo")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -45,7 +45,7 @@ func (c *Client) WxaSecurityGetOrderPathInfo(ctx context.Context, authorizerAcce
 
 	// 请求
 	var response WxaSecurityGetOrderPathInfoResponse
-	request, err := c.request(ctx, "wxa/security/getorderpathinfo?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/security/getorderpathinfo?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSecurityGetOrderPathInfoResult(response, request.ResponseBody, request), err
 }
 

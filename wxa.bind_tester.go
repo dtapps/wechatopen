@@ -27,8 +27,8 @@ func newWxaBindTesterResult(result WxaBindTesterResponse, body []byte, http gore
 func (c *Client) WxaBindTester(ctx context.Context, authorizerAccessToken, wechatid string, notMustParams ...gorequest.Params) (*WxaBindTesterResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/bind_tester")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/bind_tester")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -36,7 +36,7 @@ func (c *Client) WxaBindTester(ctx context.Context, authorizerAccessToken, wecha
 
 	// 请求
 	var response WxaBindTesterResponse
-	request, err := c.request(ctx, "wxa/bind_tester?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/bind_tester?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaBindTesterResult(response, request.ResponseBody, request), err
 }
 

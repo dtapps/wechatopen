@@ -37,14 +37,14 @@ func newCgiBinWxOpenQrCodeJumpGetResult(result CgiBinWxOpenQrCodeJumpGetResponse
 func (c *Client) CgiBinWxOpenQrCodeJumpGet(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*CgiBinWxOpenQrCodeJumpGetResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/wxopen/qrcodejumpget")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/wxopen/qrcodejumpget")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response CgiBinWxOpenQrCodeJumpGetResponse
-	request, err := c.request(ctx, "cgi-bin/wxopen/qrcodejumpget?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/wxopen/qrcodejumpget?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinWxOpenQrCodeJumpGetResult(response, request.ResponseBody, request), err
 }

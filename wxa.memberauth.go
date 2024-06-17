@@ -29,8 +29,8 @@ func newWxaMemberAuthResult(result WxaMemberAuthResponse, body []byte, http gore
 func (c *Client) WxaMemberAuth(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaMemberAuthResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/memberauth")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/memberauth")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -38,6 +38,6 @@ func (c *Client) WxaMemberAuth(ctx context.Context, authorizerAccessToken string
 
 	// 请求
 	var response WxaMemberAuthResponse
-	request, err := c.request(ctx, "wxa/memberauth?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/memberauth?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaMemberAuthResult(response, request.ResponseBody, request), err
 }

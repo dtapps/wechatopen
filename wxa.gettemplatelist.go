@@ -37,15 +37,15 @@ func newWxaGetTemplateListResult(result WxaGetTemplateListResponse, body []byte,
 func (c *Client) WxaGetTemplateList(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*WxaGetTemplateListResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/gettemplatelist")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/gettemplatelist")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaGetTemplateListResponse
-	request, err := c.request(ctx, "wxa/gettemplatelist?access_token="+componentAccessToken, params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "wxa/gettemplatelist?access_token="+componentAccessToken, params, http.MethodGet, &response)
 	return newWxaGetTemplateListResult(response, request.ResponseBody, request), err
 }
 

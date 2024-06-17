@@ -27,8 +27,8 @@ func newWxaGetDefaultamsInfoAgencyGetCustomShareRatioResult(result WxaGetDefault
 func (c *Client) WxaGetDefaultamsInfoAgencyGetCustomShareRatio(ctx context.Context, authorizerAppid, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetDefaultamsInfoAgencyGetCustomShareRatioResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/getdefaultamsinfo")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/getdefaultamsinfo")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -36,7 +36,7 @@ func (c *Client) WxaGetDefaultamsInfoAgencyGetCustomShareRatio(ctx context.Conte
 
 	// 请求
 	var response WxaGetDefaultamsInfoAgencyGetCustomShareRatioResponse
-	request, err := c.request(ctx, "wxa/getdefaultamsinfo?action=agency_get_custom_share_ratio&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/getdefaultamsinfo?action=agency_get_custom_share_ratio&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaGetDefaultamsInfoAgencyGetCustomShareRatioResult(response, request.ResponseBody, request), err
 }
 

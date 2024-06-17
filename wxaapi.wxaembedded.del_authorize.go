@@ -26,15 +26,15 @@ func newWxaApiWxaembeddedDelEmbeddedResult(result WxaApiWxaembeddedDelEmbeddedRe
 func (c *Client) WxaApiWxaembeddedDelEmbedded(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaApiWxaembeddedDelEmbeddedResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxaapi/wxaembedded/del_embedded")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxaapi/wxaembedded/del_embedded")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaApiWxaembeddedDelEmbeddedResponse
-	request, err := c.request(ctx, "wxaapi/wxaembedded/del_embedded?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxaapi/wxaembedded/del_embedded?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaApiWxaembeddedDelEmbeddedResult(response, request.ResponseBody, request), err
 }
 

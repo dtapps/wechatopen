@@ -39,8 +39,8 @@ func newcgiBinOpenapiQuotaGetResult(result cgiBinOpenapiQuotaGetResponse, body [
 func (c *Client) CgiBinOpenapiQuotaGet(ctx context.Context, componentAccessToken string, cgiPath string, notMustParams ...gorequest.Params) (*cgiBinOpenapiQuotaGetResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/openapi/quota/get")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/openapi/quota/get")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -48,7 +48,7 @@ func (c *Client) CgiBinOpenapiQuotaGet(ctx context.Context, componentAccessToken
 
 	// 请求
 	var response cgiBinOpenapiQuotaGetResponse
-	request, err := c.request(ctx, "cgi-bin/openapi/quota/get?access_token="+componentAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/openapi/quota/get?access_token="+componentAccessToken, params, http.MethodPost, &response)
 	return newcgiBinOpenapiQuotaGetResult(response, request.ResponseBody, request), err
 }
 

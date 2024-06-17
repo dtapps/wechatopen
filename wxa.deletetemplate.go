@@ -26,8 +26,8 @@ func newWxaDeleteTemplateResult(result WxaDeleteTemplateResponse, body []byte, h
 func (c *Client) WxaDeleteTemplate(ctx context.Context, componentAccessToken, templateId string, notMustParams ...gorequest.Params) (*WxaDeleteTemplateResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/deletetemplate")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/deletetemplate")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -35,7 +35,7 @@ func (c *Client) WxaDeleteTemplate(ctx context.Context, componentAccessToken, te
 
 	// 请求
 	var response WxaDeleteTemplateResponse
-	request, err := c.request(ctx, "wxa/deletetemplate?access_token="+componentAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/deletetemplate?access_token="+componentAccessToken, params, http.MethodPost, &response)
 	return newWxaDeleteTemplateResult(response, request.ResponseBody, request), err
 }
 

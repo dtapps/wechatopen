@@ -33,15 +33,15 @@ func newWxaGetLatestAuditStatusResult(result WxaGetLatestAuditStatusResponse, bo
 func (c *Client) WxaGetLatestAuditStatus(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetLatestAuditStatusResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/get_latest_auditstatus")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/get_latest_auditstatus")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaGetLatestAuditStatusResponse
-	request, err := c.request(ctx, "wxa/get_latest_auditstatus?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "wxa/get_latest_auditstatus?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
 	return newWxaGetLatestAuditStatusResult(response, request.ResponseBody, request), err
 }
 

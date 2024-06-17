@@ -50,14 +50,14 @@ func newWxaGetEffectiveDomainResult(result WxaGetEffectiveDomainResponse, body [
 func (c *Client) WxaGetEffectiveDomain(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetEffectiveDomainResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/get_effective_domain")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/get_effective_domain")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaGetEffectiveDomainResponse
-	request, err := c.request(ctx, "wxa/get_effective_domain?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/get_effective_domain?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaGetEffectiveDomainResult(response, request.ResponseBody, request), err
 }

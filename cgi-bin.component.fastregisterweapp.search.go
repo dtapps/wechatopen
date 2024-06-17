@@ -27,15 +27,15 @@ func newCgiBinComponentFastRegisterWeAppSearchResult(result CgiBinComponentFastR
 func (c *Client) CgiBinComponentFastRegisterWeAppSearch(ctx context.Context, componentAccessToken string, notMustParams ...gorequest.Params) (*CgiBinComponentFastRegisterWeAppSearchResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/fastregisterweapp")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/component/fastregisterweapp")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response CgiBinComponentFastRegisterWeAppSearchResponse
-	request, err := c.request(ctx, "cgi-bin/component/fastregisterweapp?action=search&component_access_token="+componentAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/component/fastregisterweapp?action=search&component_access_token="+componentAccessToken, params, http.MethodPost, &response)
 	return newCgiBinComponentFastRegisterWeAppSearchResult(response, request.ResponseBody, request), err
 }
 

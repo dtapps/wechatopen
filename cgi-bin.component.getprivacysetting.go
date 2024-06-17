@@ -59,8 +59,8 @@ func newCgiBinComponentGetPrivacySettingResult(result CgiBinComponentGetPrivacyS
 func (c *Client) CgiBinComponentGetPrivacySetting(ctx context.Context, authorizerAccessToken string, privacyVer int, notMustParams ...gorequest.Params) (*CgiBinComponentGetPrivacySettingResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/getprivacysetting")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/component/getprivacysetting")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -68,6 +68,6 @@ func (c *Client) CgiBinComponentGetPrivacySetting(ctx context.Context, authorize
 
 	// 请求
 	var response CgiBinComponentGetPrivacySettingResponse
-	request, err := c.request(ctx, "cgi-bin/component/getprivacysetting?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/component/getprivacysetting?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinComponentGetPrivacySettingResult(response, request.ResponseBody, request), err
 }

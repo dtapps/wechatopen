@@ -36,14 +36,14 @@ func newWxaGetVersionInfoResult(result WxaGetVersionInfoResponse, body []byte, h
 func (c *Client) WxaGetVersionInfo(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetVersionInfoResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/getversioninfo")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/getversioninfo")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaGetVersionInfoResponse
-	request, err := c.request(ctx, "wxa/getversioninfo?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/getversioninfo?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaGetVersionInfoResult(response, request.ResponseBody, request), err
 }

@@ -26,15 +26,15 @@ func newWxaSetWebViewDoMainResult(result WxaSetWebViewDoMainResponse, body []byt
 func (c *Client) WxaSetWebViewDoMain(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaSetWebViewDoMainResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/setwebviewdomain")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/setwebviewdomain")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaSetWebViewDoMainResponse
-	request, err := c.request(ctx, "wxa/setwebviewdomain?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/setwebviewdomain?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSetWebViewDoMainResult(response, request.ResponseBody, request), err
 }
 

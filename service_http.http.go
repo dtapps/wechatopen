@@ -3,7 +3,10 @@ package wechatopen
 import (
 	"context"
 	"encoding/xml"
+	"go.dtapp.net/gojson"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 	"net/http"
 )
 
@@ -22,8 +25,8 @@ type ResponseServeHttpHttp struct {
 func (c *Client) ServeHttpHttp(ctx context.Context, w http.ResponseWriter, r *http.Request) (ResponseServeHttpHttp, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "ServeHttpHttp")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "ServeHttpHttp")
+	defer span.End()
 
 	query := r.URL.Query()
 
@@ -34,12 +37,12 @@ func (c *Client) ServeHttpHttp(ctx context.Context, w http.ResponseWriter, r *ht
 	}
 	err := xml.NewDecoder(r.Body).Decode(&validateXml)
 	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
+		span.RecordError(err, trace.WithStackTrace(true))
+		span.SetStatus(codes.Error, err.Error())
 		return ResponseServeHttpHttp{}, err
 	}
 
-	return ResponseServeHttpHttp{
+	response := ResponseServeHttpHttp{
 		MsgSignature: query.Get("msg_signature"),
 		Timestamp:    query.Get("timestamp"),
 		Nonce:        query.Get("nonce"),
@@ -47,5 +50,15 @@ func (c *Client) ServeHttpHttp(ctx context.Context, w http.ResponseWriter, r *ht
 		EncryptType:  query.Get("encrypt_type"),
 		AppId:        validateXml.AppId,
 		Encrypt:      validateXml.Encrypt,
-	}, err
+	}
+
+	span.SetAttributes(attribute.String("http.params", gojson.JsonEncodeNoError(validateXml)))
+
+	span.SetAttributes(attribute.String("http.query.msg_signature", response.MsgSignature))
+	span.SetAttributes(attribute.String("http.query.timestamp", response.Timestamp))
+	span.SetAttributes(attribute.String("http.query.nonce", response.Nonce))
+	span.SetAttributes(attribute.String("http.query.signature", response.Signature))
+	span.SetAttributes(attribute.String("http.query.encrypt_type", response.EncryptType))
+
+	return response, err
 }

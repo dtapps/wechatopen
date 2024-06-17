@@ -45,14 +45,14 @@ func newWxaMediaCheckAsyncResult(result WxaMediaCheckAsyncResponse, body []byte,
 func (c *Client) WxaMediaCheckAsync(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaMediaCheckAsyncResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/media_check_async")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/media_check_async")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaMediaCheckAsyncResponse
-	request, err := c.request(ctx, "wxa/media_check_async?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/media_check_async?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaMediaCheckAsyncResult(response, request.ResponseBody, request), err
 }

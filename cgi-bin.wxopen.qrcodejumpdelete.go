@@ -26,8 +26,8 @@ func newCgiBinWxOpenQrCodeJumpDeleteResult(result CgiBinWxOpenQrCodeJumpDeleteRe
 func (c *Client) CgiBinWxOpenQrCodeJumpDelete(ctx context.Context, authorizerAccessToken, prefix string, notMustParams ...gorequest.Params) (*CgiBinWxOpenQrCodeJumpDeleteResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/wxopen/qrcodejumpdelete")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/wxopen/qrcodejumpdelete")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -35,6 +35,6 @@ func (c *Client) CgiBinWxOpenQrCodeJumpDelete(ctx context.Context, authorizerAcc
 
 	// 请求
 	var response CgiBinWxOpenQrCodeJumpDeleteResponse
-	request, err := c.request(ctx, "cgi-bin/wxopen/qrcodejumpdelete?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/wxopen/qrcodejumpdelete?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinWxOpenQrCodeJumpDeleteResult(response, request.ResponseBody, request), err
 }

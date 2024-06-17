@@ -34,14 +34,14 @@ func newWxaGetCategoryResult(result WxaGetCategoryResponse, body []byte, http go
 func (c *Client) WxaGetCategory(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetCategoryResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/get_category")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/get_category")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaGetCategoryResponse
-	request, err := c.request(ctx, "wxa/get_category?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "wxa/get_category?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
 	return newWxaGetCategoryResult(response, request.ResponseBody, request), err
 }

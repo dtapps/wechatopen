@@ -26,8 +26,8 @@ func newCgiBinMaterialGetMaterialResult(result CgiBinMaterialGetMaterialResponse
 func (c *Client) CgiBinMaterialGetMaterial(ctx context.Context, authorizerAccessToken, mediaId string, notMustParams ...gorequest.Params) (*CgiBinMaterialGetMaterialResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/material/get_material")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/material/get_material")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -35,7 +35,7 @@ func (c *Client) CgiBinMaterialGetMaterial(ctx context.Context, authorizerAccess
 
 	// 请求
 	var response CgiBinMaterialGetMaterialResponse
-	request, err := c.request(ctx, "cgi-bin/material/get_material?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/material/get_material?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 
 	// 判断内容是否为图片
 	//if request.HeaderIsImg() == false {

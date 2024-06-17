@@ -28,8 +28,8 @@ func newCgiBinComponentApiStartPushTicketResult(result CgiBinComponentApiStartPu
 func (c *Client) CgiBinComponentApiStartPushTicket(ctx context.Context, notMustParams ...gorequest.Params) (*CgiBinComponentApiStartPushTicketResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/api_start_push_ticket")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/component/api_start_push_ticket")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -38,6 +38,6 @@ func (c *Client) CgiBinComponentApiStartPushTicket(ctx context.Context, notMustP
 
 	// 请求
 	var response CgiBinComponentApiStartPushTicketResponse
-	request, err := c.request(ctx, "cgi-bin/component/api_start_push_ticket", params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/component/api_start_push_ticket", params, http.MethodPost, &response)
 	return newCgiBinComponentApiStartPushTicketResult(response, request.ResponseBody, request), err
 }

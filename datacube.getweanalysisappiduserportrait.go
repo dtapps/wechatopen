@@ -87,8 +87,8 @@ func newDataCubeGetWeAnAlySisAppidUserPortraitResult(result DataCubeGetWeAnAlySi
 func (c *Client) DataCubeGetWeAnAlySisAppidUserPortrait(ctx context.Context, authorizerAccessToken, beginDate, endDate string, notMustParams ...gorequest.Params) (*DataCubeGetWeAnAlySisAppidUserPortraitResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "datacube/getweanalysisappiduserportrait")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "datacube/getweanalysisappiduserportrait")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -97,6 +97,6 @@ func (c *Client) DataCubeGetWeAnAlySisAppidUserPortrait(ctx context.Context, aut
 
 	// 请求
 	var response DataCubeGetWeAnAlySisAppidUserPortraitResponse
-	request, err := c.request(ctx, "datacube/getweanalysisappiduserportrait?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "datacube/getweanalysisappiduserportrait?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newDataCubeGetWeAnAlySisAppidUserPortraitResult(response, request.ResponseBody, request), err
 }

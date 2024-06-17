@@ -35,8 +35,8 @@ func newWxaBusinessGetUserPhoneNumberResult(result WxaBusinessGetUserPhoneNumber
 func (c *Client) WxaBusinessGetUserPhoneNumber(ctx context.Context, authorizerAccessToken, code string, notMustParams ...gorequest.Params) (*WxaBusinessGetUserPhoneNumberResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/business/getuserphonenumber")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/business/getuserphonenumber")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -44,7 +44,7 @@ func (c *Client) WxaBusinessGetUserPhoneNumber(ctx context.Context, authorizerAc
 
 	// 请求
 	var response WxaBusinessGetUserPhoneNumberResponse
-	request, err := c.request(ctx, "wxa/business/getuserphonenumber?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/business/getuserphonenumber?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaBusinessGetUserPhoneNumberResult(response, request.ResponseBody, request), err
 }
 

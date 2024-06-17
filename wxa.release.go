@@ -26,15 +26,15 @@ func newWxaReleaseResult(result WxaReleaseResponse, body []byte, http gorequest.
 func (c *Client) WxaRelease(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaReleaseResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/release")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/release")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaReleaseResponse
-	request, err := c.request(ctx, "wxa/release?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/release?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaReleaseResult(response, request.ResponseBody, request), err
 }
 

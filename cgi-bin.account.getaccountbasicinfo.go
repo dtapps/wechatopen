@@ -57,14 +57,14 @@ func newCgiBinAccountGetAccountBasicInfoResult(result CgiBinAccountGetAccountBas
 func (c *Client) CgiBinAccountGetAccountBasicInfo(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*CgiBinAccountGetAccountBasicInfoResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/account/getaccountbasicinfo")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/account/getaccountbasicinfo")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response CgiBinAccountGetAccountBasicInfoResponse
-	request, err := c.request(ctx, fmt.Sprintf("cgi-bin/account/getaccountbasicinfo?access_token=%s", authorizerAccessToken), params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, fmt.Sprintf("cgi-bin/account/getaccountbasicinfo?access_token=%s", authorizerAccessToken), params, http.MethodGet, &response)
 	return newCgiBinAccountGetAccountBasicInfoResult(response, request.ResponseBody, request), err
 }

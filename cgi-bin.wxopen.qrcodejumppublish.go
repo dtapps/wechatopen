@@ -26,8 +26,8 @@ func newCgiBinWxOpenQrCodeJumpPublishResult(result CgiBinWxOpenQrCodeJumpPublish
 func (c *Client) CgiBinWxOpenQrCodeJumpPublish(ctx context.Context, authorizerAccessToken, prefix string, notMustParams ...gorequest.Params) (*CgiBinWxOpenQrCodeJumpPublishResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/wxopen/qrcodejumppublish")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/wxopen/qrcodejumppublish")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -35,7 +35,7 @@ func (c *Client) CgiBinWxOpenQrCodeJumpPublish(ctx context.Context, authorizerAc
 
 	// 请求
 	var response CgiBinWxOpenQrCodeJumpPublishResponse
-	request, err := c.request(ctx, "cgi-bin/wxopen/qrcodejumppublish?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "cgi-bin/wxopen/qrcodejumppublish?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newCgiBinWxOpenQrCodeJumpPublishResult(response, request.ResponseBody, request), err
 }
 

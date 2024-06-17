@@ -32,15 +32,15 @@ func newWxaRevertCodeReleaseResult(result WxaRevertCodeReleaseResponse, body []b
 func (c *Client) WxaRevertCodeRelease(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaRevertCodeReleaseResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/revertcoderelease")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/revertcoderelease")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaRevertCodeReleaseResponse
-	request, err := c.request(ctx, "wxa/revertcoderelease?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "wxa/revertcoderelease?access_token="+authorizerAccessToken, params, http.MethodGet, &response)
 	return newWxaRevertCodeReleaseResult(response, request.ResponseBody, request), err
 }
 

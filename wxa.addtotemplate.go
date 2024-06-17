@@ -26,8 +26,8 @@ func newWxaAddToTemplateResult(result WxaAddToTemplateResponse, body []byte, htt
 func (c *Client) WxaAddToTemplate(ctx context.Context, componentAccessToken, draftId string, templateType int, notMustParams ...gorequest.Params) (*WxaAddToTemplateResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/addtotemplate")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/addtotemplate")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -36,7 +36,7 @@ func (c *Client) WxaAddToTemplate(ctx context.Context, componentAccessToken, dra
 
 	// 请求
 	var response WxaAddToTemplateResponse
-	request, err := c.request(ctx, "wxa/addtotemplate?access_token="+componentAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/addtotemplate?access_token="+componentAccessToken, params, http.MethodPost, &response)
 	return newWxaAddToTemplateResult(response, request.ResponseBody, request), err
 }
 

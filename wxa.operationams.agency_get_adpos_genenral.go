@@ -49,8 +49,8 @@ func newWxaOperationamsAgencyGetAdposGenenralResult(result WxaOperationamsAgency
 func (c *Client) WxaOperationamsAgencyGetAdposGenenral(ctx context.Context, authorizerAccessToken string, page, pageSize int64, startDate, endDate, adSlot string, notMustParams ...gorequest.Params) (*WxaOperationamsAgencyGetAdposGenenralResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/operationams")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/operationams")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -64,6 +64,6 @@ func (c *Client) WxaOperationamsAgencyGetAdposGenenral(ctx context.Context, auth
 
 	// 请求
 	var response WxaOperationamsAgencyGetAdposGenenralResponse
-	request, err := c.request(ctx, "wxa/operationams?action=agency_get_adpos_genenral&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/operationams?action=agency_get_adpos_genenral&access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaOperationamsAgencyGetAdposGenenralResult(response, request.ResponseBody, request), err
 }

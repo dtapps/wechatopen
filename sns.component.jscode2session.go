@@ -33,8 +33,8 @@ func newSnsComponentJsCode2sessionResult(result SnsComponentJsCode2sessionRespon
 func (c *Client) SnsComponentJsCode2session(ctx context.Context, componentAccessToken, authorizerAppid, jsCode string, notMustParams ...gorequest.Params) (*SnsComponentJsCode2sessionResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "sns/component/jscode2session")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "sns/component/jscode2session")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -46,7 +46,7 @@ func (c *Client) SnsComponentJsCode2session(ctx context.Context, componentAccess
 
 	// 请求
 	var response SnsComponentJsCode2sessionResponse
-	request, err := c.request(ctx, "sns/component/jscode2session", params, http.MethodGet, &response)
+	request, err := c.request(ctx, span, "sns/component/jscode2session", params, http.MethodGet, &response)
 	return newSnsComponentJsCode2sessionResult(response, request.ResponseBody, request), err
 }
 

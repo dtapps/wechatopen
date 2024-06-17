@@ -28,8 +28,8 @@ func newWxaGetUserRiskRankResult(result WxaGetUserRiskRankResponse, body []byte,
 func (c *Client) WxaGetUserRiskRank(ctx context.Context, authorizerAppid, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetUserRiskRankResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/getuserriskrank")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/getuserriskrank")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -37,6 +37,6 @@ func (c *Client) WxaGetUserRiskRank(ctx context.Context, authorizerAppid, author
 
 	// 请求
 	var response WxaGetUserRiskRankResponse
-	request, err := c.request(ctx, "wxa/getuserriskrank?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/getuserriskrank?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaGetUserRiskRankResult(response, request.ResponseBody, request), err
 }

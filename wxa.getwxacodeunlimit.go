@@ -28,15 +28,15 @@ func newWxaGetWxaCodeUnLimitResult(result WxaGetWxaCodeUnLimitResponse, body []b
 func (c *Client) WxaGetWxaCodeUnLimit(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaGetWxaCodeUnLimitResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/getwxacodeunlimit")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/getwxacodeunlimit")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaGetWxaCodeUnLimitResponse
-	request, err := c.request(ctx, "wxa/getwxacodeunlimit?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/getwxacodeunlimit?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 
 	// 判断内容是否为图片
 	//if request.HeaderIsImg() == false {

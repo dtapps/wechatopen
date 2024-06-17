@@ -29,8 +29,8 @@ func newCgiBinComponentApiAuthorizerTokenResult(result CgiBinComponentApiAuthori
 func (c *Client) CgiBinComponentApiAuthorizerToken(ctx context.Context, componentAccessToken, authorizerAppid, authorizerRefreshToken string, notMustParams ...gorequest.Params) (*CgiBinComponentApiAuthorizerTokenResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "cgi-bin/component/api_authorizer_token")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "cgi-bin/component/api_authorizer_token")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -40,6 +40,6 @@ func (c *Client) CgiBinComponentApiAuthorizerToken(ctx context.Context, componen
 
 	// 请求
 	var response CgiBinComponentApiAuthorizerTokenResponse
-	request, err := c.request(ctx, fmt.Sprintf("cgi-bin/component/api_authorizer_token?component_access_token=%s", componentAccessToken), params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, fmt.Sprintf("cgi-bin/component/api_authorizer_token?component_access_token=%s", componentAccessToken), params, http.MethodPost, &response)
 	return newCgiBinComponentApiAuthorizerTokenResult(response, request.ResponseBody, request, params.Get("authorizer_appid").(string)), err
 }

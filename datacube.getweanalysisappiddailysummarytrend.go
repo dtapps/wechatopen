@@ -30,8 +30,8 @@ func newDataCubeGetWeAnAlySisAppidDailySummaryTrendResult(result DataCubeGetWeAn
 func (c *Client) DataCubeGetWeAnAlySisAppidDailySummaryTrend(ctx context.Context, authorizerAccessToken, beginDate, endDate string, notMustParams ...gorequest.Params) (*DataCubeGetWeAnAlySisAppidDailySummaryTrendResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "datacube/getweanalysisappiddailysummarytrend")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "datacube/getweanalysisappiddailysummarytrend")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
@@ -40,6 +40,6 @@ func (c *Client) DataCubeGetWeAnAlySisAppidDailySummaryTrend(ctx context.Context
 
 	// 请求
 	var response DataCubeGetWeAnAlySisAppidDailySummaryTrendResponse
-	request, err := c.request(ctx, "datacube/getweanalysisappiddailysummarytrend?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "datacube/getweanalysisappiddailysummarytrend?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newDataCubeGetWeAnAlySisAppidDailySummaryTrendResult(response, request.ResponseBody, request), err
 }

@@ -27,15 +27,15 @@ func newWxaSecurityApplyPrivacyInterfaceResult(result WxaSecurityApplyPrivacyInt
 func (c *Client) WxaSecurityApplyPrivacyInterface(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaSecurityApplyPrivacyInterfaceResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxa/security/apply_privacy_interface")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxa/security/apply_privacy_interface")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaSecurityApplyPrivacyInterfaceResponse
-	request, err := c.request(ctx, "wxa/security/apply_privacy_interface?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxa/security/apply_privacy_interface?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaSecurityApplyPrivacyInterfaceResult(response, request.ResponseBody, request), err
 }
 

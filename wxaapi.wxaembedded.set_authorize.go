@@ -27,15 +27,15 @@ func newWxaApiWxAembeddedSetAuthorizeResult(result WxaApiWxAembeddedSetAuthorize
 func (c *Client) WxaApiWxAembeddedSetAuthorize(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*WxaApiWxAembeddedSetAuthorizeResult, error) {
 
 	// OpenTelemetry链路追踪
-	ctx = c.TraceStartSpan(ctx, "wxaapi/wxaembedded/set_authorize")
-	defer c.TraceEndSpan()
+	ctx, span := TraceStartSpan(ctx, "wxaapi/wxaembedded/set_authorize")
+	defer span.End()
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
 	var response WxaApiWxAembeddedSetAuthorizeResponse
-	request, err := c.request(ctx, "wxaapi/wxaembedded/set_authorize?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
+	request, err := c.request(ctx, span, "wxaapi/wxaembedded/set_authorize?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
 	return newWxaApiWxAembeddedSetAuthorizeResult(response, request.ResponseBody, request), err
 }
 
