@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type getOnlineIcpOrderResponse struct {
+type GetOnlineIcpOrderResponse struct {
 	Errcode    int    `json:"errcode"`
 	Errmsg     string `json:"errmsg"`
 	IcpSubject struct {
@@ -78,19 +78,19 @@ type getOnlineIcpOrderResponse struct {
 	} `json:"icp_applets"` // 微信小程序信息，不包括图片、视频材料(参考：申请小程序备案接口的 ICPApplets)
 }
 
-type getOnlineIcpOrderResult struct {
-	Result getOnlineIcpOrderResponse // 结果
+type GetOnlineIcpOrderResult struct {
+	Result GetOnlineIcpOrderResponse // 结果
 	Body   []byte                    // 内容
 	Http   gorequest.Response        // 请求
 }
 
-func newgetOnlineIcpOrderResult(result getOnlineIcpOrderResponse, body []byte, http gorequest.Response) *getOnlineIcpOrderResult {
-	return &getOnlineIcpOrderResult{Result: result, Body: body, Http: http}
+func newGetOnlineIcpOrderResult(result GetOnlineIcpOrderResponse, body []byte, http gorequest.Response) *GetOnlineIcpOrderResult {
+	return &GetOnlineIcpOrderResult{Result: result, Body: body, Http: http}
 }
 
-// getOnlineIcpOrder 获取小程序已备案详情
+// GetOnlineIcpOrder 获取小程序已备案详情
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/record/getOnlineIcpOrder.html
-func (c *Client) getOnlineIcpOrder(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*getOnlineIcpOrderResult, error) {
+func (c *Client) GetOnlineIcpOrder(ctx context.Context, authorizerAccessToken string, notMustParams ...gorequest.Params) (*GetOnlineIcpOrderResult, error) {
 
 	// OpenTelemetry链路追踪
 	ctx, span := TraceStartSpan(ctx, "wxa/icp/get_online_icp_order")
@@ -100,13 +100,13 @@ func (c *Client) getOnlineIcpOrder(ctx context.Context, authorizerAccessToken st
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
-	var response getOnlineIcpOrderResponse
+	var response GetOnlineIcpOrderResponse
 	request, err := c.request(ctx, span, "wxa/icp/get_online_icp_order?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
-	return newgetOnlineIcpOrderResult(response, request.ResponseBody, request), err
+	return newGetOnlineIcpOrderResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述
-func (resp *getOnlineIcpOrderResult) ErrcodeInfo() string {
+func (resp *GetOnlineIcpOrderResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 86328:
 		return "无法找到资源"

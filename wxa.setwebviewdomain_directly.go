@@ -6,24 +6,24 @@ import (
 	"net/http"
 )
 
-type modifyJumpDomainDirectlyResponse struct {
+type ModifyJumpDomainDirectlyResponse struct {
 	Errcode int    `json:"errcode"` // 错误码
 	Errmsg  string `json:"errmsg"`  // 错误信息
 }
 
-type modifyJumpDomainDirectlyResult struct {
-	Result modifyJumpDomainDirectlyResponse // 结果
+type ModifyJumpDomainDirectlyResult struct {
+	Result ModifyJumpDomainDirectlyResponse // 结果
 	Body   []byte                           // 内容
 	Http   gorequest.Response               // 请求
 }
 
-func newmodifyJumpDomainDirectlyResult(result modifyJumpDomainDirectlyResponse, body []byte, http gorequest.Response) *modifyJumpDomainDirectlyResult {
-	return &modifyJumpDomainDirectlyResult{Result: result, Body: body, Http: http}
+func newModifyJumpDomainDirectlyResult(result ModifyJumpDomainDirectlyResponse, body []byte, http gorequest.Response) *ModifyJumpDomainDirectlyResult {
+	return &ModifyJumpDomainDirectlyResult{Result: result, Body: body, Http: http}
 }
 
-// modifyJumpDomainDirectly 快速配置小程序业务域名
+// ModifyJumpDomainDirectly 快速配置小程序业务域名
 // https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/modifyJumpDomainDirectly.html
-func (c *Client) modifyJumpDomainDirectly(ctx context.Context, authorizerAccessToken string, action string, webviewdomain []string, notMustParams ...gorequest.Params) (*modifyJumpDomainDirectlyResult, error) {
+func (c *Client) ModifyJumpDomainDirectly(ctx context.Context, authorizerAccessToken string, action string, webviewdomain []string, notMustParams ...gorequest.Params) (*ModifyJumpDomainDirectlyResult, error) {
 
 	// OpenTelemetry链路追踪
 	ctx, span := TraceStartSpan(ctx, "wxa/setwebviewdomain_directly")
@@ -35,13 +35,13 @@ func (c *Client) modifyJumpDomainDirectly(ctx context.Context, authorizerAccessT
 	params.Set("webviewdomain", webviewdomain)
 
 	// 请求
-	var response modifyJumpDomainDirectlyResponse
+	var response ModifyJumpDomainDirectlyResponse
 	request, err := c.request(ctx, span, "wxa/setwebviewdomain_directly?access_token="+authorizerAccessToken, params, http.MethodPost, &response)
-	return newmodifyJumpDomainDirectlyResult(response, request.ResponseBody, request), err
+	return newModifyJumpDomainDirectlyResult(response, request.ResponseBody, request), err
 }
 
 // ErrcodeInfo 错误描述
-func (resp *modifyJumpDomainDirectlyResult) ErrcodeInfo() string {
+func (resp *ModifyJumpDomainDirectlyResult) ErrcodeInfo() string {
 	switch resp.Result.Errcode {
 	case 86103:
 		return "check confirmfile fail! 检查检验文件失败"
