@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/mitchellh/mapstructure v1.5.0
 	go.dtapp.net/gojson v1.0.4
-	go.dtapp.net/gorequest v1.0.70
+	go.dtapp.net/gorequest v1.0.72
 	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/trace v1.27.0
 )
@@ -13,7 +13,7 @@ require (
 require (
 	github.com/MercuryEngineering/CookieMonster v0.0.0-20180304172713-1584578b3403 // indirect
 	github.com/basgys/goxml2json v1.1.0 // indirect
-	github.com/bytedance/sonic v1.11.8 // indirect
+	github.com/bytedance/sonic v1.11.9 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
