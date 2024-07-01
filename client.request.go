@@ -40,10 +40,12 @@ func (c *Client) request(ctx context.Context, span trace.Span, url string, param
 	}
 
 	// 解析响应
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		span.RecordError(err, trace.WithStackTrace(true))
-		span.SetStatus(codes.Error, err.Error())
+	if request.HeaderIsImg() == false {
+		err = gojson.Unmarshal(request.ResponseBody, &response)
+		if err != nil {
+			span.RecordError(err, trace.WithStackTrace(true))
+			span.SetStatus(codes.Error, err.Error())
+		}
 	}
 
 	// OpenTelemetry链路追踪
